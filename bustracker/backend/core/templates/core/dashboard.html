@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="panel-header">
+  <div>
+    <h2>Dashboard</h2>
+    <p id="dash-welcome">Welcome back!</p>
+  </div>
+</div>
+
+<div class="stats-grid" id="stats-grid">
+  <!-- Populated by JS -->
+  <div class="stat-card skeleton"></div>
+  <div class="stat-card skeleton"></div>
+  <div class="stat-card skeleton"></div>
+  <div class="stat-card skeleton"></div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="card">
+    <div class="card-header">
+      <h3>Live Bus Map</h3>
+      <span class="live-indicator"><span class="live-dot"></span> Live</span>
+    </div>
+    <div id="mini-map" class="mini-map"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Recent Activity</h3></div>
+    <div id="recent-activity" class="activity-list">
+      <div class="empty-state"><p>Loading...</p></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

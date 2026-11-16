@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AdminLTE 2 | Returns History</title>
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+  {% load static %}
+  <!-- Bootstrap 3.3.7 -->
+  <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Ionicons -->
+  <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet">
+  <!-- Theme style -->
+  <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet">
+  <!-- AdminLTE Skins -->
+  <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet">
+  <!-- Date Picker -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+  <style>
+    .returns-summary {
+      background: #fff;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-left: 4px solid #f39c12;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+    .total-returns {
+      font-size: 24px;
+      font-weight: bold;
+      color: #f39c12;
+    }
+    .date-range {
+      color: #777;
+      font-size: 14px;
+    }
+    .search-bar {
+      margin-bottom: 15px;
+    }
+    .date-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="{% url 'admin_dashboard' %}" class="logo">
+      <span class="logo-mini"><b></b></span>
+      <span class="logo-lg"><b>POS</b>System</span>
+    </a>
+    
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account Menu -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{ username }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Returns History
+        <small>Product returns management</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'admin_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Returns History</li>
+      </ol>
+    </section>
+    <aside class="main-sidebar">
+      <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+          <div class="pull-left image">
+            <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+          </div>
+          <div class="pull-left info">
+            <p>{{ ename }}</p>
+            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          </div>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li class="active treeview">
+            <a href="{% url 'admin_dashboard' %}">
+              <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+            </a>
+          </li>
+          <li class="treeview">
+            <a href="{% url 'add_employee' %}">
+              <i class="fa fa-user-plus"></i> <!-- Free icon -->
+              <span>Add Employee</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'memployee' %}">
+              <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+              <span>Manage Employee</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'inventory' %}">
+              <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+              <span>Product Inventory</span>
+            </a>
+          </li>
+          
+         
+          
+          <li>
+            <a href="{% url 'past_invoice_admin' %}">
+              <i class="fa fa-file-text"></i> <!-- Free document icon -->
+              <span>Invoice History</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'wastage_report_admin' %}">
+              <i class="fa fa-trash"></i> <!-- Free trash icon -->
+              <span>Wastage / Loss</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'return_history_admin' %}">
+              <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+              <span>Returns History</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'sales_analysis' %}">
+              <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+              <span>Sales Performance</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'logout' %}">
+              <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </aside>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- Returns Summary -->
+          <div class="returns-summary">
+            <h4>Total Returns Value</h4>
+            <div class="total-returns">₹{{ total_returns|floatformat:2 }}</div>
+            <div class="date-range">
+              <i class="fa fa-calendar"></i> {{ start_date }} to {{ end_date }}
+            </div>
+          </div>
+          
+          <!-- Main Box -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Returned Products</h3>
+              <div class="box-tools pull-right">
+                <form method="GET" class="form-inline">
+                  <!-- Date Filter -->
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="start_date" class="form-control datepicker" 
+                             placeholder="Start Date" value="{{ start_date }}" style="width: 120px;">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="end_date" class="form-control datepicker" 
+                             placeholder="End Date" value="{{ end_date }}" style="width: 120px;">
+                    </div>
+                  </div>
+                  
+                  <!-- Search -->
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="search" class="form-control" 
+                             placeholder="Search..." value="{{ search_query }}" style="width: 200px;">
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Reset Button -->
+                  <a href="{% url 'return_history_admin' %}" class="btn btn-default">
+                    <i class="fa fa-refresh"></i> Reset
+                  </a>
+                </form>
+              </div>
+            </div>
+            
+            <!-- Table -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Invoice ID</th>
+                      <th>Date</th>
+                      <th>Product Name</th>
+                      <th class="text-right">Price</th>
+                      <th class="text-right">Quantity</th>
+                      <th class="text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for return in returns %}
+                    <tr>
+                      <td>{{ return.invoice_id }}</td>
+                      <td>{{ return.date|date:"M d, Y" }}</td>
+                      <td>{{ return.product_name }}</td>
+                      <td class="text-right">₹{{ return.price }}</td>
+                      <td class="text-right">{{ return.quantity }}</td>
+                      <td class="text-right">₹{{ return.amount }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="6" class="text-center">No returns found</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="box-footer clearfix">
+              <div class="pagination-controls">
+                <span>
+                  {% if returns.has_previous %}
+                    <a href="?page=1&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      <i class="fa fa-angle-double-left"></i> First
+                    </a>
+                    <a href="?page={{ returns.previous_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      <i class="fa fa-angle-left"></i> Previous
+                    </a>
+                  {% endif %}
+                </span>
+                <span class="current">
+                  Page {{ returns.number }} of {{ returns.paginator.num_pages }}
+                </span>
+                <span>
+                  {% if returns.has_next %}
+                    <a href="?page={{ returns.next_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      Next <i class="fa fa-angle-right"></i>
+                    </a>
+                    <a href="?page={{ returns.paginator.num_pages }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      Last <i class="fa fa-angle-double-right"></i>
+                    </a>
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 1.0
+    </div>
+    <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+  </footer>
+</div>
+
+<!-- REQUIRED JS SCRIPTS -->
+<script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+<script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+
+<script>
+  $(function () {
+    // Initialize datepicker with today as default
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      endDate: '0d' // Disable future dates
+    });
+
+    // Set default dates if empty
+    if (!$('[name="start_date"]').val()) {
+      $('[name="start_date"]').datepicker('setDate', new Date());
+    }
+    if (!$('[name="end_date"]').val()) {
+      $('[name="end_date"]').datepicker('setDate', new Date());
+    }
+  });
+</script>
+</body>
+</html>

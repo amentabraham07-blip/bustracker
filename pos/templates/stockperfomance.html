@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Stock Performance</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Load static files in Django -->
+    {% load static %}
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+      /* Custom styles for stock indicators and search bar */
+      .stock-indicators {
+          margin-bottom: 15px;
+      }
+      .stock-indicator {
+          display: inline-block;
+          padding: 5px 10px;
+          margin-right: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      .stock-indicator.low-stock {
+          background: rgba(255, 193, 7, 0.1);
+          border: 1px solid #ffc107;
+          color: #ffc107;
+      }
+      .stock-indicator.out-of-stock {
+          background: rgba(220, 53, 69, 0.1);
+          border: 1px solid #dc3545;
+          color: #dc3545;
+      }
+      .search-bar {
+          margin-bottom: 15px;
+      }
+      .search-bar input {
+          width: 100%;
+          padding: 8px;
+          border-radius: 4px;
+          border: 1px solid #ddd;
+      }
+      .low-stock-row {
+          background: rgba(255, 193, 7, 0.05);
+          border-left: 4px solid #ffc107;
+      }
+      .out-of-stock-row {
+          background: rgba(220, 53, 69, 0.05);
+          border-left: 4px solid #dc3545;
+      }
+      .no-results {
+          text-align: center;
+          padding: 20px;
+          font-style: italic;
+          color: rgba(255, 255, 255, 0.6);
+      }
+    </style>
+  </head>
+  <body class="skin-blue">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="../../index2.html" class="logo"><b>POS</b>System</a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs"><b>{{username}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              {% load static%}
+              <img src="{% static 'adminp/dist/img/avatar.png' %}" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+              <p>{{ename}}</p>
+              <a href="#"><i class="fa fa-circle text-success"></i> Stock Manager</a>
+            </div>
+          </div>
+
+          <ul class="sidebar-menu">
+            <li class="active treeview">
+              <a href="#">
+                <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span> 
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="{%  url 'addcategory' %}">
+                <i class="ion ion-stats-bars"></i>
+                <span>Add Category</span>
+              </a>
+            </li>
+            <li>
+              <li class="treeview">
+                <a href="{% url 'addcategory' %}">
+                  <i class="fa fa-plus-circle"></i> <!-- Icon for adding a category -->
+                  <span>Add Category</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'mcategory' %}">
+                  <i class="fa fa-list-alt"></i> <!-- Icon for managing categories -->
+                  <span>Manage Category</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'add_product' %}">
+                  <i class="fa fa-cart-plus"></i> <!-- Icon for adding a product -->
+                  <span>Add Product</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'manage_product' %}">
+                  <i class="fa fa-cubes"></i> <!-- Icon for managing products -->
+                  <span>Manage Products</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'manage_stock' %}">
+                  <i class="fa fa-warehouse"></i> <!-- Icon for managing stock -->
+                  <span>Manage Stocks</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'stock_performance' %}">
+                  <i class="fa fa-chart-line"></i> <!-- Icon for stock performance -->
+                  <span>Stock Performance</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'wastage_management' %}">
+                  <i class="fa fa-trash-alt"></i> <!-- Icon for stock performance -->
+                  <span>Wastage Management</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'wastage_report' %}">
+                  <i class="fa fa-recycle"></i> <!-- Icon for stock performance -->
+                  <span>Wastage Analysis</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'logout' %}">
+                  <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                  <span>Logout</span>
+                </a>
+              </li>
+              
+            
+             
+            
+          </ul>
+        </section>
+      </aside>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1>Stock Performance</h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Stock Performance</li>
+          </ol>
+        </section>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Stock Performance</h3>
+                  <!-- Sorting Dropdown -->
+                  <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Sort By <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#" onclick="showSalesToday()">Sales Today</a></li>
+                      <li><a href="#" onclick="showSalesThisMonth()">Sales This Month</a></li>
+                      <li><a href="#" onclick="showDeadProductsToday()">Dead Products Today</a></li>
+                      <li><a href="#" onclick="showDeadStocksThisMonth()">Dead Stocks This Month</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                  <!-- Sales Today Table -->
+                  <div id="sales-today">
+                    <h4 style="margin: 20px;">Sales Today</h4>
+                    <table class="table table-hover" id="product-table">
+                      <thead>
+                        <tr>
+                          <th>Product ID</th>
+                          <th>Product Name</th>
+                          <th>Quantity Sold</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sales-today-body">
+                        {% if sales_today %}
+                          {% for item in sales_today %}
+                          <tr>
+                            <td>{{ item.product_id }}</td>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.quantity_sold }} <b><br>Kg/Pieces</b></td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="3" class="no-results">Sales haven't occurred during the selected time span.</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Sales This Month Table -->
+                  <div id="sales-this-month" style="display: none;">
+                    <h4 style="margin: 20px;">Sales This Month</h4>
+                    <table class="table table-hover" id="product-table">
+                      <thead>
+                        <tr>
+                          <th>Product ID</th>
+                          <th>Product Name</th>
+                          <th>Quantity Sold</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sales-this-month-body">
+                        {% if sales_this_month %}
+                          {% for item in sales_this_month %}
+                          <tr>
+                            <td>{{ item.product_id }}</td>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.quantity_sold }} <b><br>Kg/Pieces</b></td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="3" class="no-results">Sales haven't occurred during the selected time span.</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Dead Products Today Table -->
+                  <div id="dead-products-today" style="display: none;">
+                    <h4 style="margin: 20px;">Dead Products Today</h4>
+                    <table class="table table-hover" id="product-table">
+                      <thead>
+                        <tr>
+                          <th>Product ID</th>
+                          <th>Product Name</th>
+                        </tr>
+                      </thead>
+                      <tbody id="dead-products-today-body">
+                        {% if dead_products_today %}
+                          {% for product in dead_products_today %}
+                          <tr>
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.product_name }}</td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="2" class="no-results">No dead stock in this time span.</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Dead Stocks This Month Table -->
+                  <div id="dead-stocks-this-month" style="display: none;">
+                    <h4 style="margin: 20px;">Dead Stocks This Month</h4>
+                    <table class="table table-hover" id="product-table">
+                      <thead>
+                        <tr>
+                          <th>Product ID</th>
+                          <th>Product Name</th>
+                        </tr>
+                      </thead>
+                      <tbody id="dead-stocks-this-month-body">
+                        {% if dead_stocks_this_month %}
+                          {% for product in dead_stocks_this_month %}
+                          <tr>
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.product_name }}</td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="2" class="no-results">No dead stock in this time span.</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+      </footer>
+    </div>
+
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'adminp/plugins/fastclick/fastclick.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/demo.js' %}"></script>
+    <script>
+      function showSalesToday() {
+          document.getElementById('sales-today').style.display = 'block';
+          document.getElementById('sales-this-month').style.display = 'none';
+          document.getElementById('dead-products-today').style.display = 'none';
+          document.getElementById('dead-stocks-this-month').style.display = 'none';
+      }
+
+      function showSalesThisMonth() {
+          document.getElementById('sales-today').style.display = 'none';
+          document.getElementById('sales-this-month').style.display = 'block';
+          document.getElementById('dead-products-today').style.display = 'none';
+          document.getElementById('dead-stocks-this-month').style.display = 'none';
+      }
+
+      function showDeadProductsToday() {
+          document.getElementById('sales-today').style.display = 'none';
+          document.getElementById('sales-this-month').style.display = 'none';
+          document.getElementById('dead-products-today').style.display = 'block';
+          document.getElementById('dead-stocks-this-month').style.display = 'none';
+      }
+
+      function showDeadStocksThisMonth() {
+          document.getElementById('sales-today').style.display = 'none';
+          document.getElementById('sales-this-month').style.display = 'none';
+          document.getElementById('dead-products-today').style.display = 'none';
+          document.getElementById('dead-stocks-this-month').style.display = 'block';
+      }
+
+      // Show Sales Today by default
+      showSalesToday();
+    </script>
+  </body>
+</html>

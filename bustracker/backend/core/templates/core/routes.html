@@ -1,0 +1,74 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Routes{% endblock %}
+{% block page_title %}Bus Routes{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <div>
+    <h2>Bus Routes</h2>
+    <p>Manage routes and the stops along each route.</p>
+  </div>
+  <div class="panel-actions" id="routes-actions"></div>
+</div>
+
+<!-- ADD ROUTE FORM -->
+<div id="add-route-form" class="form-card hidden">
+  <h3>Add New Route</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Route Number</label><input type="text" id="new-route-num" class="form-input" placeholder="e.g. 101"></div>
+    <div class="form-group"><label>Route Name</label><input type="text" id="new-route-name" class="form-input" placeholder="e.g. City Express"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Origin</label><input type="text" id="new-route-origin" class="form-input" placeholder="Starting point"></div>
+    <div class="form-group"><label>Destination</label><input type="text" id="new-route-dest" class="form-input" placeholder="End point"></div>
+  </div>
+  <div class="form-actions">
+    <button class="btn-outline" onclick="document.getElementById('add-route-form').classList.add('hidden')">Cancel</button>
+    <button class="btn-primary" onclick="createRoute()">Create Route</button>
+  </div>
+</div>
+
+<!-- ROUTES LIST -->
+<div id="routes-grid" class="routes-grid"></div>
+
+<!-- MANAGE STOPS PANEL (slides in when operator clicks Manage Stops) -->
+<div id="manage-stops-panel" class="form-card hidden" style="margin-top:24px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <h3 style="margin-bottom:0;border-bottom:none;padding-bottom:0;">
+      🛣 Stops for Route <span id="manage-route-label" style="color:var(--accent)"></span>
+    </h3>
+    <button class="btn-outline" onclick="closeManageStops()">✕ Close</button>
+  </div>
+
+  <!-- Current stops in this route -->
+  <div style="margin-bottom:20px;">
+    <h4 style="font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Current Stops (in order)</h4>
+    <div id="route-stops-list"></div>
+  </div>
+
+  <!-- Add stop to route -->
+  <div style="border-top:1px solid var(--border);padding-top:16px;">
+    <h4 style="font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Add a Stop to This Route</h4>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Select Stop</label>
+        <select id="add-stop-select" class="form-input">
+          <option value="">Loading stops...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Order (position in route)</label>
+        <input type="number" id="add-stop-order" class="form-input" value="1" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Estimated time from previous stop</label>
+      <input type="text" id="add-stop-time" class="form-input" placeholder="e.g. 10 mins">
+    </div>
+    <button class="btn-primary" onclick="addStopToRoute()">+ Add Stop to Route</button>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/routes.js' %}"></script>
+{% endblock %}

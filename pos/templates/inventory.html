@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Dashboard</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Load static files in Django -->
+    {% load static %}
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <style>
+      /* Custom styles for stock indicators and search bar */
+      .stock-indicators {
+          margin-bottom: 15px;
+      }
+      .stock-indicator {
+          display: inline-block;
+          padding: 5px 10px;
+          margin-right: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      .stock-indicator.low-stock {
+          background: rgba(255, 193, 7, 0.1);
+          border: 1px solid #ffc107;
+          color: #ffc107;
+      }
+      .stock-indicator.out-of-stock {
+          background: rgba(220, 53, 69, 0.1);
+          border: 1px solid #dc3545;
+          color: #dc3545;
+      }
+      .search-bar {
+          margin-bottom: 15px;
+      }
+      .search-bar input {
+          width: 100%;
+          padding: 8px;
+          border-radius: 4px;
+          border: 1px solid #ddd;
+      }
+      .low-stock-row {
+          background: rgba(255, 193, 7, 0.05);
+          border-left: 4px solid #ffc107;
+      }
+      .out-of-stock-row {
+          background: rgba(220, 53, 69, 0.05);
+          border-left: 4px solid #dc3545;
+      }
+    </style>
+  </head>
+  <body class="skin-blue">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="{% url 'admin_dashboard' %}" class="logo"><b>POS</b>System</a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs"><b>{{username}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1>Manage Stocks</h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">Product Inventory</a></li>
+          </ol>
+        </section>
+        <aside class="main-sidebar">
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+              <div class="pull-left image">
+                <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+              </div>
+              <div class="pull-left info">
+                <p>{{ ename }}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
+            </div>
+  
+            <ul class="sidebar-menu">
+              <li class="active treeview">
+                <a href="#">
+                  <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+                </a>
+              </li>
+              <li class="treeview">
+                <a href="{% url 'add_employee' %}">
+                  <i class="fa fa-user-plus"></i> <!-- Free icon -->
+                  <span>Add Employee</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'memployee' %}">
+                  <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+                  <span>Manage Employee</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'inventory' %}">
+                  <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+                  <span>Product Inventory</span>
+                </a>
+              </li>
+              
+             
+              
+              <li>
+                <a href="{% url 'past_invoice_admin' %}">
+                  <i class="fa fa-file-text"></i> <!-- Free document icon -->
+                  <span>Invoice History</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'wastage_report_admin' %}">
+                  <i class="fa fa-trash"></i> <!-- Free trash icon -->
+                  <span>Wastage / Loss</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'return_history_admin' %}">
+                  <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+                  <span>Returns History</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'sales_analysis' %}">
+                  <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+                  <span>Sales Performance</span>
+                </a>
+              </li>
+  
+              <li>
+                <a href="{% url 'logout' %}">
+                  <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </aside>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Stock Register</h3>
+                  <!-- Stock Indicators -->
+                  <div class="stock-indicators">
+                    <div class="stock-indicator low-stock" onclick="filterProducts('low-stock')">
+                      Low Stock: <span id="low-stock-count">{{ low_stock_count }}</span>
+                    </div>
+                    <div class="stock-indicator out-of-stock" onclick="filterProducts('out-of-stock')">
+                      Out of Stock: <span id="out-of-stock-count">{{ out_of_stock_count }}</span>
+                    </div>
+                  </div>
+                  <!-- Search Bar -->
+                  <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search by product name..." oninput="searchProducts()">
+                  </div>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover" id="product-table">
+                    <thead>
+                      <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Buying Price</th>
+                        <th>Selling Price</th>
+                        <th>Available Quantity</th>
+                        <th>Low Quantity Alert At </th>
+                        <th>Tax Rate </th>
+                        <th>Is Returnable? </th>
+                      </tr>
+                    </thead>
+                    <tbody id="product-table-body">
+                      {% for product in products %}
+                      <tr class="{% if product.quantity <= 0 %}out-of-stock-row{% elif product.quantity < product.low_quantity %}low-stock-row{% endif %}">
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.buying_price }}</td>
+                        <td>{{ product.selling_price }}</td>
+                        <td>{{ product.quantity }} </td>
+                        <td>{{ product.low_quantity }}<b>     <br>Kg/Pieces left</b></td>
+                        <td>{{ product.tax }} </td>
+                        <td>{{ product.Return }} </td>
+                        
+                        
+                       
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+      </footer>
+    </div>
+
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'adminp/plugins/fastclick/fastclick.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/demo.js' %}"></script>
+    <script>
+      // Function to filter products based on stock status
+      function filterProducts(filterType) {
+          const rows = document.querySelectorAll("#product-table-body tr");
+          let lowStockCount = 0;
+          let outOfStockCount = 0;
+
+          rows.forEach(row => {
+              const isLowStock = row.classList.contains("low-stock-row");
+              const isOutOfStock = row.classList.contains("out-of-stock-row");
+
+              if (filterType === "low-stock") {
+                  row.style.display = isLowStock ? "" : "none";
+              } else if (filterType === "out-of-stock") {
+                  row.style.display = isOutOfStock ? "" : "none";
+              } else {
+                  row.style.display = "";
+              }
+
+              // Update counts
+              if (isLowStock) lowStockCount++;
+              if (isOutOfStock) outOfStockCount++;
+          });
+
+          // Update indicator counts
+          document.getElementById("low-stock-count").textContent = lowStockCount;
+          document.getElementById("out-of-stock-count").textContent = outOfStockCount;
+      }
+
+      // Function to search products by name
+      function searchProducts() {
+          const searchQuery = document.getElementById("search-input").value.toLowerCase();
+          const rows = document.querySelectorAll("#product-table-body tr");
+
+          rows.forEach(row => {
+              const productName = row.children[1].textContent.toLowerCase();
+              if (productName.includes(searchQuery)) {
+                  row.style.display = "";
+              } 
+              else {
+                  row.style.display = "none";
+              }
+          });
+      }
+
+      // Reset filters and search on page load
+      document.addEventListener("DOMContentLoaded", () => {
+          filterProducts("all"); // Show all products initially
+          document.getElementById("search-input").addEventListener("input", searchProducts);
+      });
+    </script>
+  </body>
+</html>

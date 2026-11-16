@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Notifications{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <h2>Notifications</h2>
+  <div class="panel-actions">
+    <button class="btn-outline" onclick="markAllRead()">Mark all read</button>
+  </div>
+</div>
+<div id="notifications-list"></div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/notifications.js' %}"></script>
+{% endblock %}

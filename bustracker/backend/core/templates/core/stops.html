@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Bus Stops{% endblock %}
+{% block page_title %}Bus Stops{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <div>
+    <h2>Bus Stops</h2>
+    <p>All registered stops. Passengers can find nearby stops using their location.</p>
+  </div>
+  <div class="panel-actions">
+    <input type="text" id="stops-search" placeholder="Search stops..." class="search-input" oninput="filterStops()">
+    <button class="btn-outline" onclick="findNearbyStops()">📍 Nearby</button>
+    <button class="btn-primary" id="add-stop-btn" style="display:none" onclick="toggleAddStopForm()">+ Add Stop</button>
+  </div>
+</div>
+
+<!-- ADD STOP FORM (admin only) -->
+<div id="add-stop-form" class="form-card hidden">
+  <h3>Add New Bus Stop</h3>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Stop Name</label>
+      <input type="text" id="stop-name" class="form-input" placeholder="e.g. Kozhikode KSRTC Bus Stand">
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text" id="stop-address" class="form-input" placeholder="Street / landmark">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Latitude</label>
+      <input type="number" id="stop-lat" class="form-input" step="0.000001" placeholder="e.g. 11.258800">
+    </div>
+    <div class="form-group">
+      <label>Longitude</label>
+      <input type="number" id="stop-lng" class="form-input" step="0.000001" placeholder="e.g. 75.780400">
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn-outline" type="button" onclick="pickLocationForStop()">📍 Pick from my location</button>
+    <span style="font-size:0.8rem;color:var(--text-muted);margin-left:10px;">Or enter coordinates manually above</span>
+  </div>
+  <div id="stop-error" class="form-error hidden"></div>
+  <div class="form-actions">
+    <button class="btn-outline" onclick="toggleAddStopForm()">Cancel</button>
+    <button class="btn-primary" onclick="createStop()">Add Stop</button>
+  </div>
+</div>
+
+<!-- STOPS GRID -->
+<div id="stops-grid" class="stops-grid"></div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/stops.js' %}"></script>
+{% endblock %}

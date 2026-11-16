@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Traffic Blocks{% endblock %}
+{% block page_title %}Traffic Blocks{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <h2>Traffic Blocks</h2>
+  <div class="panel-actions" id="traffic-actions"></div>
+</div>
+<div id="blocks-grid"></div>
+
+<div id="add-block-form" class="form-card hidden">
+  <h3>Report Traffic Block</h3>
+  <div class="form-group"><label>Title</label><input type="text" id="block-title" class="form-input" placeholder="e.g. Road accident at MG Road"></div>
+  <div class="form-group"><label>Description</label><textarea id="block-desc" class="form-input" rows="3" placeholder="Describe the traffic situation..."></textarea></div>
+  <div class="form-row">
+    <div class="form-group"><label>Latitude</label><input type="number" id="block-lat" class="form-input" step="0.000001" placeholder="11.2588"></div>
+    <div class="form-group"><label>Longitude</label><input type="number" id="block-lng" class="form-input" step="0.000001" placeholder="75.7804"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Severity</label>
+      <select id="block-severity" class="form-input">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Radius (meters)</label><input type="number" id="block-radius" class="form-input" value="500"></div>
+  </div>
+  <div class="form-group">
+    <button class="btn-outline" type="button" onclick="useMyLocation()">📍 Use My Location</button>
+  </div>
+  <div class="form-actions">
+    <button class="btn-outline" onclick="document.getElementById('add-block-form').classList.add('hidden')">Cancel</button>
+    <button class="btn-primary" onclick="createTrafficBlock()">Report Block</button>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/traffic.js' %}"></script>
+{% endblock %}

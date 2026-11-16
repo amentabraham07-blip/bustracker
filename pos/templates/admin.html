@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Dashboard</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {% load static %}
+    <!-- Bootstrap 3.3.2 -->
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />    
+    <!-- FontAwesome 4.3.0 -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons 2.0.0 -->
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />    
+    <!-- Theme style -->
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins -->
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Date Picker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <style>
+      .date-filter-controls {
+        margin-bottom: 20px;
+      }
+      .date-filter-btn {
+        margin-right: 5px;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body class="skin-blue">
+    <div class="wrapper">
+      
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="#" class="logo"><b>POS</b>System</a>
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- User Account -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'adminp/dist/img/avatar.png' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs">{{ username }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      
+      <!-- Left side column -->
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+              <p>{{ ename }}</p>
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+
+          <ul class="sidebar-menu">
+            <li class="active treeview">
+              <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="{% url 'add_employee' %}">
+                <i class="fa fa-user-plus"></i> <!-- Free icon -->
+                <span>Add Employee</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'memployee' %}">
+                <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+                <span>Manage Employee</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'inventory' %}">
+                <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+                <span>Product Inventory</span>
+              </a>
+            </li>
+            
+           
+            
+            <li>
+              <a href="{% url 'past_invoice_admin' %}">
+                <i class="fa fa-file-text"></i> <!-- Free document icon -->
+                <span>Invoice History</span>
+              </a>
+            </li>
+            
+            <li>
+              <a href="{% url 'wastage_report_admin' %}">
+                <i class="fa fa-trash"></i> <!-- Free trash icon -->
+                <span>Wastage / Loss</span>
+              </a>
+            </li>
+            
+            <li>
+              <a href="{% url 'return_history_admin' %}">
+                <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+                <span>Returns History</span>
+              </a>
+            </li>
+            
+            <li>
+              <a href="{% url 'sales_analysis' %}">
+                <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+                <span>Sales Performance</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="{% url 'logout' %}">
+                <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </aside>
+
+      <!-- Right side column -->
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1>
+            Dashboard
+            <small>Sales Overview</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+          </ol>
+        </section>
+
+        <section class="content">
+          <!-- Date Filter Controls -->
+          <div class="row date-filter-controls">
+            <div class="col-md-12">
+              <form method="GET" class="form-inline">
+                <div class="btn-group">
+                  <a href="?period=today" class="btn btn-default date-filter-btn {% if period == 'today' %}active{% endif %}">
+                    Today
+                  </a>
+                  <a href="?period=week" class="btn btn-default date-filter-btn {% if period == 'week' %}active{% endif %}">
+                    This Week
+                  </a>
+                  <a href="?period=month" class="btn btn-default date-filter-btn {% if period == 'month' %}active{% endif %}">
+                    This Month
+                  </a>
+                  
+                </div>
+                
+                <div><p></p></div>
+
+          <!-- Sales Statistics -->
+          <div class="row">
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-aqua">
+                <div class="inner">
+                  <h3>₹{{ stats.total_profit|floatformat:2 }}</h3>
+                  <p>Total Profit</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'sales_analysis' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-green">
+                <div class="inner">
+                  <h3>₹{{ stats.net_profit|floatformat:2 }}</h3>
+                  <p>Net Profit</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-cash"></i>
+                </div>
+                <a href="{% url 'sales_analysis' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-yellow">
+                <div class="inner">
+                  <h3>₹{{ stats.total_wastage_loss|floatformat:2 }}</h3>
+                  <p>Wastage Loss</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-alert-circled"></i>
+                </div>
+                <a href="{% url 'wastage_report_admin' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h3>₹{{ stats.total_sale_value|floatformat:2 }}</h3>
+                  <p>Total Sales</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-bag"></i>
+                </div>
+                <a href="{% url 'past_invoice_admin' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Statistics Row -->
+          <div class="row">
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-purple">
+                <div class="inner">
+                  <h3>₹{{ stats.net_amount|floatformat:2 }}</h3>
+                  <p>Net Amount</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="{% url 'sales_analysis' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-maroon">
+                <div class="inner">
+                  <h3>₹{{ stats.total_return_value|floatformat:2 }}</h3>
+                  <p>Total Returns</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-arrow-return-left"></i>
+                </div>
+                <a href="{% url 'return_history_admin' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-teal">
+                <div class="inner">
+                  <h3>{{ stats.total_products }}</h3>
+                  <p>Products Sold</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-cube"></i>
+                </div>
+                <a href="{% url 'past_invoice_admin' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-olive">
+                <div class="inner">
+                  <h3>{{ stats.total_transactions }}</h3>
+                  <p>Invoices Generated</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-document-text"></i>
+                </div>
+                <a href="{% url 'past_invoice_admin' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Date Range Info -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="callout callout-info">
+                <h4><i class="fa fa-calendar"></i> Date Range</h4>
+                <p>Showing data from {{ stats.date_range }}</p>
+              </div>
+            </div>
+            
+          </div>
+          <!-- Add this section after the existing statistics rows -->
+<div class="row">
+  <div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-navy">
+      <div class="inner">
+        <h3>{{ stats.stock_out_products }}</h3>
+        <p> Products Out of Stock</p><p>‎</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-alert"></i>
+      </div>
+      <a href="{% url 'inventory' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-orange">
+      <div class="inner">
+        <h3>{{ stats.low_stock_products }}</h3>
+        <p> Products Low in Stock</p><p>‎</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-alert-circled"></i>
+      </div>
+      <a href="{% url 'inventory' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-blue">
+      <div class="inner">
+        <h3>₹{{ stats.stock_worth_buying|floatformat:2 }}</h3>
+        <p> Worth Products in Stock</p><p>(According to bought price)</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-social-usd"></i>
+      </div>
+      <a href="{% url 'inventory' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  
+  <div class="col-lg-3 col-xs-6">
+    <div class="small-box bg-light-blue">
+      <div class="inner">
+        <h3>₹{{ stats.stock_worth_selling|floatformat:2 }}</h3>
+        <p> Worth of Stocks in Stock</p><p>(According to selling price)</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-cash"></i>
+      </div>
+      <a href="{% url 'inventory' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+</div>
+          
+        </section>
+      </div>
+
+      
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+      </footer>
+    </div>
+
+    <!-- REQUIRED JS SCRIPTS -->
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static 'adminp/dist/js/app.min.js' %}" type="text/javascript"></script>
+
+    <script>
+      $(function () {
+        // Initialize datepicker
+        $('.datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true,
+          todayHighlight: true,
+          endDate: '0d' // Disable future dates
+        });
+
+        // Set default dates if empty
+        if (!$('[name="start_date"]').val()) {
+          $('[name="start_date"]').datepicker('setDate', new Date());
+        }
+        if (!$('[name="end_date"]').val()) {
+          $('[name="end_date"]').datepicker('setDate', new Date());
+        }
+      });
+    </script>
+  </body>
+</html>

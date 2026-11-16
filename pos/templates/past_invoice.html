@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon POS Dashboard</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #a855f7;
+            --accent: #10b981;
+            --dark: #1e1e2e;
+            --light: #f8fafc;
+            --neon: #00f7ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #2a2a4a);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 80px 1fr 60px;
+            min-height: 100vh;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header Styles */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            background: var(--glass);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(122, 90, 248, 0.1);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--dark);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1.5rem;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .employee-profile {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            background: linear-gradient(45deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--neon);
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 3rem;
+            background: var(--dark);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .card:hover {
+            background: rgba(122, 90, 248, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+         /* Footer Styles */
+         .footer {
+            grid-column: 2 / -2;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(122, 90, 248, 0.1);
+            color: var(--neon);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(122, 90, 248, 0.03);
+        }
+
+        td {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form styles */
+        .form-inline {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--neon);
+            background: var(--dark);
+            color: var(--light);
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .pagination-controls a {
+            color: var(--neon);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--neon);
+            margin: 0 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .pagination-controls a:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+        /* Invoice Styling */
+.invoice-details {
+    background: var(--glass);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow);
+}
+
+.invoice-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.invoice-header h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.invoice-header p {
+    font-size: 1rem;
+    margin: 0.25rem 0;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--glass);
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background: rgba(122, 90, 248, 0.1);
+    color: var(--neon);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+td {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+tr:hover {
+    background: rgba(122, 90, 248, 0.03);
+}
+
+.invoice-footer {
+    text-align: right;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.invoice-footer p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">POS System</div>
+            <div class="user-info">
+                <span>{{ username }}</span>
+                <i class="fas fa-user-astronaut fa-lg" style="color: var(--neon);"></i>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="employee-profile">
+                <img src="{% static 'adminp/dist/img/avatar5.png' %}" alt="Profile" class="profile-img">
+                <h3 style="color: var(--neon); margin-bottom: 0.5rem;">{{ ename }}</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);"> Cashier</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="card">
+                <h3 style="color: var(--neon); margin-bottom: 1.5rem;">Recent Transactions</h3>
+
+                <!-- Search Bar and Date Filter -->
+                <form method="GET" class="form-inline">
+                    <input type="text" name="search" placeholder="Search by Invoice ID or Customer Phone" 
+                        value="{{ search_query }}" class="form-control">
+                    
+                    <input type="date" name="start_date" value="{{ start_date }}" class="form-control">
+                    <input type="date" name="end_date" value="{{ end_date }}" class="form-control">
+                    
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Date</th>
+                                <th>Customer Phone</th>
+                                <th>Total Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr>
+                                <td>{{ invoice.invoice_id }}</td>
+                                <td>{{ invoice.date|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if invoice.customer_phone %}
+                                        {{ invoice.customer_phone }}
+                                    {% else %}
+                                        Not Available
+                                    {% endif %}
+                                </td>
+                                <td>₹{{ invoice.total_amount }}</td>
+                                <td>
+                                    <a href="{% url 'view_invoice' invoice.invoice_id %}" class="btn btn-primary">
+                                        <i class="fas fa-file-invoice"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="pagination-controls">
+                    <span>
+                        {% if invoices.has_previous %}
+                            <a href="?page=1&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}">&laquo; First</a>
+                            <a href="?page={{ invoices.previous_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}">Previous</a>
+                        {% endif %}
+                    </span>
+                    <span>Page {{ invoices.number }} of {{ invoices.paginator.num_pages }}</span>
+                    <span>
+                        {% if invoices.has_next %}
+                            <a href="?page={{ invoices.next_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}">Next</a>
+                            <a href="?page={{ invoices.paginator.num_pages }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}">Last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            
+        </main>
+       
+
+        <footer class="footer">
+            © 2023 NEONPOS | Next-Gen Retail Solutions
+        </footer>
+    </div>
+
+    </div>
+</body>
+</html>

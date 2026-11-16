@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Driver Tracking{% endblock %}
+{% block page_title %}Driver Tracking{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <h2>Driver Dashboard</h2>
+  <div class="panel-actions">
+    <span id="driver-status-badge" class="status-badge offline">Offline</span>
+  </div>
+</div>
+
+<div class="driver-grid">
+  <div class="card">
+    <div class="card-header"><h3>My Bus</h3></div>
+    <div id="driver-bus-info">Loading...</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Location</h3></div>
+    <div class="location-info">
+      <p>Lat: <strong id="driver-lat">—</strong></p>
+      <p>Lng: <strong id="driver-lng">—</strong></p>
+      <p>Speed: <strong id="driver-speed">—</strong> km/h</p>
+      <p>Updated: <strong id="driver-last-update">—</strong></p>
+    </div>
+    <button class="btn-primary mt-1" id="tracking-toggle" onclick="toggleDriverTracking()">
+      Start Tracking
+    </button>
+  </div>
+  <div class="card full-width">
+    <div class="card-header"><h3>⚠️ Active Traffic Blocks</h3></div>
+    <div id="driver-blocks"></div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/driver.js' %}"></script>
+{% endblock %}

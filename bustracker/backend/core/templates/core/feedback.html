@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Feedback{% endblock %}
+{% block page_title %}Feedback{% endblock %}
+{% block content %}
+<div class="panel-header"><h2>Feedback</h2></div>
+
+<div id="feedback-form-card" class="form-card">
+  <h3>Submit Feedback</h3>
+  <div class="form-group">
+    <label>Rating</label>
+    <div class="star-rating" id="star-rating">
+      <span class="star" onclick="setRating(1)">★</span>
+      <span class="star" onclick="setRating(2)">★</span>
+      <span class="star" onclick="setRating(3)">★</span>
+      <span class="star" onclick="setRating(4)">★</span>
+      <span class="star" onclick="setRating(5)">★</span>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Category</label>
+      <select id="fb-category" class="form-input">
+        <option value="service">Service Quality</option>
+        <option value="driver">Driver Behavior</option>
+        <option value="cleanliness">Cleanliness</option>
+        <option value="punctuality">Punctuality</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Bus (optional)</label>
+      <select id="fb-bus" class="form-input"><option value="">Select bus</option></select>
+    </div>
+  </div>
+  <div class="form-group"><label>Message</label><textarea id="fb-message" class="form-input" rows="4" placeholder="Share your experience..."></textarea></div>
+  <button class="btn-primary" onclick="submitFeedback()">Submit Feedback</button>
+</div>
+
+<div class="card mt-2">
+  <div class="card-header"><h3>All Feedback</h3></div>
+  <div id="feedback-list"></div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/feedback.js' %}"></script>
+{% endblock %}

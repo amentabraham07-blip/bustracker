@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Complaints{% endblock %}
+{% block page_title %}Complaints{% endblock %}
+{% block content %}
+<div class="panel-header"><h2>Complaints</h2></div>
+
+<div id="complaint-form-card" class="form-card">
+  <h3>Submit Complaint</h3>
+  <div class="form-group"><label>Subject</label><input type="text" id="comp-subject" class="form-input" placeholder="Brief subject"></div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Report To</label>
+      <select id="comp-target" class="form-input">
+        <option value="operator">Bus Operator</option>
+        <option value="police">Traffic Police</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Bus (optional)</label>
+      <select id="comp-bus" class="form-input"><option value="">Select bus</option></select>
+    </div>
+  </div>
+  <div class="form-group"><label>Description</label><textarea id="comp-desc" class="form-input" rows="4" placeholder="Describe your complaint in detail..."></textarea></div>
+  <button class="btn-primary" onclick="submitComplaint()">Submit Complaint</button>
+</div>
+
+<div class="card mt-2">
+  <div class="card-header"><h3>Complaints</h3></div>
+  <div id="complaints-list"></div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/complaints.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Live Map{% endblock %}
+{% block page_title %}Live Bus Tracking{% endblock %}
+
+{% block content %}
+<div class="panel-header">
+  <div>
+    <h2>Live Bus Tracking</h2>
+  </div>
+  <div class="panel-actions">
+    <span class="live-indicator"><span class="live-dot"></span> Updates every 10s</span>
+    <button class="btn-outline" onclick="refreshMap()">↺ Refresh</button>
+  </div>
+</div>
+
+<div class="map-controls">
+  <button class="map-ctrl-btn active" id="btn-all" onclick="filterMapBuses('all')">All Buses</button>
+  <button class="map-ctrl-btn" id="btn-active" onclick="filterMapBuses('active')">Active Only</button>
+  <button class="map-ctrl-btn" id="btn-stops" onclick="toggleStops()">Bus Stops</button>
+  <button class="map-ctrl-btn" id="btn-blocks" onclick="toggleBlocks()">Traffic Blocks</button>
+</div>
+
+<div id="main-map" class="main-map"></div>
+
+<div id="bus-info-panel" class="bus-info-panel hidden">
+  <button class="close-btn" onclick="closeBusInfo()">✕</button>
+  <div id="bus-info-content"></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/map.js' %}"></script>
+{% endblock %}

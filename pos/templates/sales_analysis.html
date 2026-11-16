@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AdminLTE 2 | Sales Analysis</title>
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+  {% load static %}
+  <!-- Bootstrap 3.3.7 -->
+  <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Ionicons -->
+  <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet">
+  <!-- Theme style -->
+  <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet">
+  <!-- AdminLTE Skins -->
+  <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet">
+  <!-- Date Picker -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+  <style>
+    .stat-card {
+      background: #fff;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .profit { border-left: 4px solid #00a65a; }
+    .profit .stat-value { color: #00a65a; }
+    .net-profit { border-left: 4px solid #3c8dbc; }
+    .net-profit .stat-value { color: #3c8dbc; }
+    .loss { border-left: 4px solid #f39c12; }
+    .loss .stat-value { color: #f39c12; }
+    .sale { border-left: 4px solid #605ca8; }
+    .sale .stat-value { color: #605ca8; }
+    .net-amount { border-left: 4px solid #dd4b39; }
+    .net-amount .stat-value { color: #dd4b39; }
+    .date-range {
+      color: #777;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .search-bar {
+      margin-bottom: 15px;
+    }
+    .date-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="{% url 'admin_dashboard' %}" class="logo">
+      <span class="logo-mini"><b></b></span>
+      <span class="logo-lg"><b>POS</b>System</span>
+    </a>
+    
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account Menu -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{ username }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Sales Analysis
+        <small>Detailed sales performance</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'admin_dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Sales Analysis</li>
+      </ol>
+    </section>
+    <aside class="main-sidebar">
+      <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+          <div class="pull-left image">
+            <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+          </div>
+          <div class="pull-left info">
+            <p>{{ ename }}</p>
+            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          </div>
+        </div>
+
+        <ul class="sidebar-menu">
+          <li class="active treeview">
+            <a href="{% url 'admin_dashboard' %}">
+              <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+            </a>
+          </li>
+          <li class="treeview">
+            <a href="{% url 'add_employee' %}">
+              <i class="fa fa-user-plus"></i> <!-- Free icon -->
+              <span>Add Employee</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'memployee' %}">
+              <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+              <span>Manage Employee</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'inventory' %}">
+              <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+              <span>Product Inventory</span>
+            </a>
+          </li>
+          
+         
+          
+          <li>
+            <a href="{% url 'past_invoice_admin' %}">
+              <i class="fa fa-file-text"></i> <!-- Free document icon -->
+              <span>Invoice History</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'wastage_report_admin' %}">
+              <i class="fa fa-trash"></i> <!-- Free trash icon -->
+              <span>Wastage / Loss</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'return_history_admin' %}">
+              <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+              <span>Returns History</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'sales_analysis' %}">
+              <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+              <span>Sales Performance</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'logout' %}">
+              <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </aside>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- Statistics Cards -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="stat-card profit">
+                <h4>Total Profit</h4>
+                <div class="stat-value">₹{{ stats.total_profit|floatformat:2 }}</div>
+                <div class="date-range">
+                  <i class="fa fa-calendar"></i> {{ stats.date_range }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card net-profit">
+                <h4>Net Profit</h4>
+                <div class="stat-value">₹{{ stats.net_profit|floatformat:2 }}</div>
+                <small>(Total Profit - Wastage Loss)</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card loss">
+                <h4>Loss Due to Wastage</h4>
+                <div class="stat-value">₹{{ stats.total_wastage_loss|floatformat:2 }}</div>
+               
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="stat-card sale">
+                <h4>Total Sale Value</h4>
+                <div class="stat-value">₹{{ stats.total_sale_value|floatformat:2 }}</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card net-amount">
+                <h4>Net Amount</h4>
+                <div class="stat-value">₹{{ stats.net_amount|floatformat:2 }}</div>
+                <small>(Total Sales - Returns)</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card">
+                <h4>Total Returns Value</h4>
+                <div class="stat-value">₹{{ stats.total_return_value|floatformat:2 }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Box -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Product Sales Performance</h3>
+              <div class="box-tools pull-right">
+                <form method="GET" class="form-inline">
+                  <!-- Date Filter -->
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="start_date" class="form-control datepicker" 
+                             placeholder="Start Date" value="{{ start_date }}" style="width: 120px;">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="end_date" class="form-control datepicker" 
+                             placeholder="End Date" value="{{ end_date }}" style="width: 120px;">
+                    </div>
+                  </div>
+                  
+                  <!-- Search -->
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="search" class="form-control" 
+                             placeholder="Search products..." value="{{ search_query }}" style="width: 200px;">
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Sort Dropdown -->
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-sort"></i> Sort <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <li><a href="?{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}sort=profit_desc">
+                        <i class="fa fa-sort-amount-desc text-success"></i> Highest Profit
+                      </a></li>
+                      <li><a href="?{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}sort=quantity_desc">
+                        <i class="fa fa-sort-numeric-desc text-primary"></i> Highest Quantity
+                      </a></li>
+                    </ul>
+                  </div>
+                  
+                  <!-- Reset Button -->
+                  <a href="{% url 'sales_analysis' %}" class="btn btn-default">
+                    <i class="fa fa-refresh"></i> Reset
+                  </a>
+                </form>
+              </div>
+            </div>
+            
+            <!-- Table -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Product Name</th>
+                      <th class="text-right">Quantity Sold</th>
+                      <th class="text-right">Total Amount</th>
+                      <th class="text-right">Profit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for product in products %}
+                    <tr>
+                      <td>{{ product.id }}</td>
+                      <td>{{ product.name }}</td>
+                      <td class="text-right">{{ product.quantity }}</td>
+                      <td class="text-right">₹{{ product.amount|floatformat:2 }}</td>
+                      <td class="text-right">₹{{ product.profit|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="5" class="text-center">No sales data found</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if products.has_other_pages %}
+            <div class="box-footer clearfix">
+              <div class="pagination-controls">
+                <span>
+                  {% if products.has_previous %}
+                    <a href="?page=1&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      <i class="fa fa-angle-double-left"></i> First
+                    </a>
+                    <a href="?page={{ products.previous_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      <i class="fa fa-angle-left"></i> Previous
+                    </a>
+                  {% endif %}
+                </span>
+                <span class="current">
+                  Page {{ products.number }} of {{ products.paginator.num_pages }}
+                </span>
+                <span>
+                  {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      Next <i class="fa fa-angle-right"></i>
+                    </a>
+                    <a href="?page={{ products.paginator.num_pages }}&search={{ search_query }}&start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-default">
+                      Last <i class="fa fa-angle-double-right"></i>
+                    </a>
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 1.0
+    </div>
+    <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+  </footer>
+</div>
+
+<!-- REQUIRED JS SCRIPTS -->
+<script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+<script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+
+<script>
+  $(function () {
+    // Initialize datepicker with today as default
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      endDate: '0d' // Disable future dates
+    });
+
+    // Set default dates if empty
+    if (!$('[name="start_date"]').val()) {
+      $('[name="start_date"]').datepicker('setDate', new Date());
+    }
+    if (!$('[name="end_date"]').val()) {
+      $('[name="end_date"]').datepicker('setDate', new Date());
+    }
+  });
+</script>
+</body>
+</html>

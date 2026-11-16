@@ -1,0 +1,994 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon POS Dashboard</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Updated CSS in style section -->
+<style>
+    .main-content {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .invoice-section {
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    .product-entry-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+    }
+
+    .product-entry-row input {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    .action-buttons button {
+        margin-left: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+</style>
+<style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #a855f7;
+            --accent: #10b981;
+            --dark: #1e1e2e;
+            --light: #f8fafc;
+            --neon: #00f7ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #2a2a4a);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 80px 1fr 60px;
+            min-height: 100vh;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header Styles */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            background: var(--glass);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(122, 90, 248, 0.1);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--dark);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1.5rem;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .employee-profile {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            background: linear-gradient(45deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--neon);
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            background: var(--glass);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .nav-item:hover {
+            background: rgba(122, 90, 248, 0.15);
+            transform: translateX(10px);
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            color: var(--neon);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 3rem;
+            background: var(--dark);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 247, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card:hover {
+            background: rgba(122, 90, 248, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer Styles */
+        .footer {
+            grid-column: 1 / -1;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+    <style>
+        <style>
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--dark);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 2rem 1.5rem;
+        position: relative;
+        box-shadow: var(--shadow);
+    }
+
+    .employee-profile {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        padding: 2rem 1rem;
+        border-radius: 16px;
+        background: linear-gradient(45deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
+    }
+
+    .profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 1.5rem;
+        border: 3px solid var(--neon);
+        box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .profile-img:hover {
+        transform: scale(1.05) rotate(5deg);
+    }
+
+    .nav-menu {
+        list-style: none;
+    }
+
+    .nav-item {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        background: var(--glass);
+    }
+
+    .nav-item::before {
+        content: '';
+        position: absolute;
+        left: -100%;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+        transition: left 0.6s;
+    }
+
+    .nav-item:hover {
+        background: rgba(122, 90, 248, 0.15);
+        transform: translateX(10px);
+    }
+
+    .nav-item:hover::before {
+        left: 100%;
+    }
+
+    .nav-item i {
+        margin-right: 1rem;
+        color: var(--neon);
+    }
+
+    /* Adjust main content positioning */
+    .main-content {
+        grid-column: 2;
+        padding: 3rem;
+        background: var(--dark);
+        overflow-y: auto;
+    }
+</style>
+<style>
+    .glass-input {
+        background: var(--glass);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .glass-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+    }
+
+    table td, table th {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+</style>
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">POS System</div>
+            <div class="user-info">
+                <span>{{username}}</span>
+                <i class="fas fa-user-astronaut fa-lg" style="color: var(--neon);"></i>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="employee-profile">
+                <img src="{% static 'adminp/dist/img/avatar5.png' %}" alt="Profile" class="profile-img">
+                <h3 style="color: var(--neon); margin-bottom: 0.5rem;">{{ename}}</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);"> Cashier</p>
+            </div>
+            <nav>
+                
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Keep the existing template structure and styles -->
+<!-- Modify the main-content section as follows -->
+
+<main class="main-content">
+    <div class="invoice-section">
+        <div class="invoice-header">
+            <h2>Invoice #<span id="invoice-id">{{ next_invoice_id }}</span></h2>
+            <div class="customer-input">
+                <input type="tel" 
+                       id="customer-phone" 
+                       placeholder="Customer Phone (Optional)"
+                       class="glass-input"
+                       maxlength="10"
+                       oninput="validatePhoneNumber(this)">
+                <small id="phone-error" style="color: red; display: none;">Phone number must be exactly 10 digits.</small>
+            </div>
+            
+            <script>
+            function validatePhoneNumber(input) {
+                // Remove all non-digit characters
+                input.value = input.value.replace(/\D/g, '');
+            
+                // Limit to 10 digits
+                if (input.value.length > 10) {
+                    input.value = input.value.slice(0, 10);
+                }
+            
+                const error = document.getElementById('phone-error');
+            
+                // Show error if not empty and not exactly 10 digits
+                if (input.value.length > 0 && input.value.length !== 10) {
+                    error.style.display = 'block';
+                } else {
+                    error.style.display = 'none';
+                }
+            }
+            </script>
+            
+        </div>
+
+        <div class="product-entry">
+    <div class="search-row">
+        <input type="text" id="product-search" placeholder="Enter Product ID/Name and press Enter" 
+               class="glass-input" autocomplete="off">
+    </div>
+    <div id="product-preview" style="display: none;">
+        <!-- Dynamic content will be added here -->
+    </div>
+</div>
+
+<!-- Updated invoice items table with edit button -->
+<table style="width: 100%; border-collapse: collapse; margin-top: 2rem;">
+    <thead>
+        <table>
+            <thead>
+                <tr style="border-bottom: 2px solid var(--primary);">
+                    <th style="padding: 1rem;">#</th>
+                    <th style="padding: 1rem;">Product</th>
+                    <th style="padding: 1rem;">Price</th>
+                    <th style="padding: 1rem;">Qty</th>
+                    <th style="padding: 1rem;">Amount</th>
+                    <th style="padding: 1rem;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-items-body">
+                <!-- Invoice rows will go here -->
+            </tbody>
+            <!-- Total row at the bottom of the table -->
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align: right; padding-right: 1rem;">Total:</td>
+                    <td style="padding: 1rem; text-align: right;">₹<span id="total-amount">0.00</span></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        </div>
+<div><p>‎</p></div>
+        
+            <button class="btn btn-primary" onclick="saveAndPrint()">
+                <i class="fas fa-save"></i> Save & Print
+            </button>
+        </div>
+    </div></main>
+    <footer class="footer">
+        © 2025 POSSystem | All Rights Reserved.
+    </footer>
+
+
+<script>
+    let invoiceItems = [];
+    let totalAmount = 0;
+
+    // Product Search Handling
+    document.getElementById('product-search').addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+            const searchInput = e.target;
+            const query = searchInput.value.trim();
+            
+            if (!query) {
+                alert('Please enter a product ID or name');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/search-product/?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Show product preview row
+                const previewDiv = document.getElementById('product-preview');
+                previewDiv.style.display = 'block';
+                previewDiv.innerHTML = `
+                    <div class="product-entry-row">
+                        <input type="text" value="${data.id}" disabled>
+                        <input type="text" value="${data.name}" disabled>
+                        <input type="number" value="${data.price}" disabled>
+                        <input type="number" id="preview-qty" placeholder="Enter Qty" 
+                                min="0.001" step="0.001" value="1" class="glass-input">
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="addPreviewProduct()">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Add quantity input handler
+                document.getElementById('preview-qty').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        addPreviewProduct();
+                    }
+                });
+
+            } catch (error) {
+                alert('Error loading product');
+            }
+        }
+    });
+
+    
+    function addPreviewProduct() {
+        const previewRow = document.querySelector('.product-entry-row');
+        if (!previewRow) return;
+
+        const qtyInput = previewRow.querySelector('#preview-qty');
+        const qty = parseFloat(qtyInput.value) || 0.001; // Minimum 0.001
+        
+        if (qty <= 0) {
+            alert('Quantity must be greater than 0');
+            return;
+        }
+
+        const product = {
+            id: previewRow.children[0].value,
+            name: previewRow.children[1].value,
+            price: parseFloat(previewRow.children[2].value),
+            qty: qty,
+            amount: parseFloat((parseFloat(previewRow.children[2].value) * qty).toFixed(3))
+        };
+
+        invoiceItems.push(product);
+        totalAmount = parseFloat((totalAmount + product.amount).toFixed(2));
+        updateInvoiceDisplay();
+        clearProductPreview();
+    }
+
+    function updateInvoiceDisplay() {
+        const tbody = document.getElementById('invoice-items-body');
+        tbody.innerHTML = '';
+        
+        invoiceItems.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="padding: 1rem;">${index + 1}</td>
+                <td style="padding: 1rem;">${item.name}</td>
+                <td style="padding: 1rem;">₹${item.price.toFixed(2)}</td>
+                <td style="padding: 1rem;">${item.qty}</td>
+                <td style="padding: 1rem;">₹${item.amount.toFixed(2)}</td>
+                <td style="padding: 1rem;">
+                    <button class="btn btn-primary" onclick="editItem(${index})" 
+                            style="padding: 0.5rem; margin-right: 0.5rem;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="removeItem(${index})" 
+                            style="padding: 0.5rem;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+    }
+
+
+    function removeItem(index) {
+        totalAmount -= invoiceItems[index].amount;
+        invoiceItems.splice(index, 1);
+        updateInvoiceDisplay();
+    }
+    function clearProductPreview() {
+        document.getElementById('product-preview').style.display = 'none';
+        document.getElementById('product-search').value = '';
+    }
+
+     function editItem(index) {
+        const item = invoiceItems[index];
+        const newQty = prompt('Enter new quantity:', item.qty);
+        
+        if (newQty && !isNaN(newQty) && newQty > 0) {
+            const oldAmount = item.amount;
+            item.qty = parseInt(newQty);
+            item.amount = item.price * item.qty;
+            totalAmount += (item.amount - oldAmount);
+            updateInvoiceDisplay();
+        }
+    }
+    async function saveAndPrint() {
+    // First save the invoice
+    const invoiceData = {
+        customer_phone: document.getElementById('customer-phone').value,
+        products: invoiceItems.map(item => ({
+            product_id: item.id,
+            quantity: item.qty
+        })),
+        total_amount: totalAmount
+    };
+
+    try {
+        const response = await fetch('/create-invoice/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(invoiceData)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to save invoice');
+        }
+        
+        // Create print content
+        const printContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Invoice #${data.invoice_id}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
+                    .invoice-header { text-align: center; margin-bottom: 20px; }
+                    .invoice-header h1 { margin: 0; font-size: 24px; }
+                    .invoice-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th { background-color: #f5f5f5; text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+                    td { padding: 8px; border-bottom: 1px solid #eee; }
+                    .total-row { font-weight: bold; }
+                    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #777; }
+                    @media print {
+                        .no-print { display: none !important; }
+                        body { padding: 0 10px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="invoice-header">
+                    <h1>INVOICE</h1>
+                    <p>#${data.invoice_id}</p>
+                </div>
+                
+                <div class="invoice-info">
+                    <div>
+                        <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                        ${invoiceData.customer_phone ? `<p><strong>Customer Phone:</strong> ${invoiceData.customer_phone}</p>` : ''}
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${invoiceItems.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.name}</td>
+                                <td>₹${item.price.toFixed(2)}</td>
+                                <td>${item.qty % 1 === 0 ? item.qty : item.qty.toFixed(3)}</td>
+                                <td>₹${item.amount.toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="4" style="text-align: right;">Total:</td>
+                            <td>₹${totalAmount.toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <div class="footer">
+                    <p>Thank you for your business!</p>
+                    <p>${new Date().getFullYear()} © Your Company Name</p>
+                </div>
+            </body>
+            </html>
+        `;
+
+        // Open print window
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        
+        // Wait for content to load before printing
+        printWindow.onload = function() {
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            }, 200);
+        };
+
+        // Reset form after successful print
+        invoiceItems = [];
+        totalAmount = 0;
+        updateInvoiceDisplay();
+        document.getElementById('customer-phone').value = '';
+        
+    } catch (error) {
+        alert(error.message);
+        console.error('Invoice Error:', error);
+    }
+
+}
+
+    // CSRF token helper
+    function getCookie(name) {
+        // Existing implementation
+    }
+</script>
+        
+        <script>
+            let invoiceItems = [];
+            let totalAmount = 0;
+        
+            // Simulated product database
+            const products = {
+                '1': { id: '1', name: 'Product 1', price: 100 },
+                '2': { id: '2', name: 'Product 2', price: 200 },
+                // Add more products as needed
+            };
+        
+            document.getElementById('product-id').addEventListener('input', function(e) {
+                const product = products[e.target.value];
+                if (product) {
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-price').value = product.price;
+                }
+            });
+        
+            function addProduct() {
+                const productId = document.getElementById('product-id').value;
+                const product = products[productId];
+                const qty = parseInt(document.getElementById('product-qty').value) || 1;
+                
+                if (product) {
+                    const amount = product.price * qty;
+                    const item = {
+                        id: productId,
+                        name: product.name,
+                        price: product.price,
+                        qty: qty,
+                        amount: amount
+                    };
+        
+                    invoiceItems.push(item);
+                    totalAmount += amount;
+                    updateInvoiceDisplay();
+                    clearProductFields();
+                }
+            }
+        
+            function updateInvoiceDisplay() {
+                const tbody = document.getElementById('invoice-items-body');
+                tbody.innerHTML = '';
+                
+                invoiceItems.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 1rem;">${index + 1}</td>
+                        <td style="padding: 1rem;">${item.id}</td>
+                        <td style="padding: 1rem;">${item.name}</td>
+                        <td style="padding: 1rem;">₹${item.price}</td>
+                        <td style="padding: 1rem;">${item.qty}</td>
+                        <td style="padding: 1rem;">₹${item.amount}</td>
+                        <td style="padding: 1rem;">
+                            <button onclick="removeItem(${index})" 
+                                    style="background: none; border: none; color: var(--neon); cursor: pointer;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+        
+                document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+            }
+        
+            function removeItem(index) {
+                totalAmount -= invoiceItems[index].amount;
+                invoiceItems.splice(index, 1);
+                updateInvoiceDisplay();
+            }
+        
+            function clearProductFields() {
+                document.getElementById('product-id').value = '';
+                document.getElementById('product-name').value = '';
+                document.getElementById('product-price').value = '';
+                document.getElementById('product-qty').value = 1;
+            }
+        
+            function saveAndPrint() {
+                // Save to database logic here
+                window.print();
+            }
+        </script>
+        
+      
+
+    <script>
+    async function saveAndPrint() {
+    // First save the invoice
+    const invoiceData = {
+        customer_phone: document.getElementById('customer-phone').value,
+        products: invoiceItems.map(item => ({
+            product_id: item.id,
+            quantity: item.qty
+        })),
+        total_amount: totalAmount
+    };
+
+    try {
+        const response = await fetch('/create-invoice/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(invoiceData)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to save invoice');
+        }
+        
+        // Create print content
+        const printContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #333; }
+                    .invoice-header { text-align: center; margin-bottom: 20px; }
+                    .invoice-header h1 { margin: 0; font-size: 24px; }
+                    .invoice-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th { background-color: #f5f5f5; text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+                    td { padding: 8px; border-bottom: 1px solid #eee; }
+                    .total-row { font-weight: bold; }
+                    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #777; }
+                    @media print {
+                        .no-print { display: none !important; }
+                        body { padding: 0 10px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="invoice-header">
+                    <h1>INVOICE</h1>
+                    <p>#${data.invoice_id}</p>
+                </div>
+                
+                <div class="invoice-info">
+                    <div>
+                        <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                        ${invoiceData.customer_phone ? `<p><strong>Customer Phone:</strong> ${invoiceData.customer_phone}</p>` : ''}
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${invoiceItems.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.name}</td>
+                                <td>₹${item.price.toFixed(2)}</td>
+                                <td>${item.qty % 1 === 0 ? item.qty : item.qty.toFixed(3)}</td>
+                                <td>₹${item.amount.toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="4" style="text-align: right;">Total:</td>
+                            <td>₹${totalAmount.toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <div class="footer">
+                    <p>Thank you for your business!</p>
+                    <p>${new Date().getFullYear()} ©POSSystem . All Rights Deserved.</p>
+                </div>
+            </body>
+            </html>
+        `;
+
+        // Open print window
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        
+        // Wait for content to load before printing
+        printWindow.onload = function() {
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            }, 200);
+        };
+
+        // Reset form after successful print
+        invoiceItems = [];
+        totalAmount = 0;
+        updateInvoiceDisplay();
+        document.getElementById('customer-phone').value = '';
+        
+    } catch (error) {
+        alert(error.message);
+        console.error('Invoice Error:', error);
+    }
+}
+    
+    // CSRF token helper function
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }</script>
+</body>
+</html>

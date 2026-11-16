@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — BusTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="auth-body">
+
+<div class="auth-bg">
+  <div class="auth-grid"></div>
+  <div class="auth-orb auth-orb-1"></div>
+  <div class="auth-orb auth-orb-2"></div>
+</div>
+
+<div class="auth-container" style="max-width:520px;">
+  <div class="auth-brand">
+    <div class="auth-logo">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="#00D4AA"/>
+        <path d="M8 28V18C8 14 11 12 15 12H25C29 12 32 14 32 18V28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="13" cy="29" r="3" fill="white"/>
+        <circle cx="27" cy="29" r="3" fill="white"/>
+        <path d="M8 22H32" stroke="white" stroke-width="2"/>
+        <path d="M14 12V22" stroke="white" stroke-width="1.5"/>
+        <path d="M26 12V22" stroke="white" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <h1 class="auth-title">BusTrack</h1>
+    <p class="auth-subtitle">Create your account</p>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <a href="/login/" class="auth-tab">Sign In</a>
+      <a href="/register/" class="auth-tab active">Register</a>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" id="reg-first" placeholder="First name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" id="reg-last" placeholder="Last name" class="form-input">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="reg-username" placeholder="Choose a username" class="form-input" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="reg-email" placeholder="your@email.com" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="tel" id="reg-phone" placeholder="+91 XXXXX XXXXX" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>Register As</label>
+      <select id="reg-role" class="form-input" onchange="updateRegFields()">
+        <option value="user">Passenger</option>
+        <option value="driver">Bus Driver</option>
+        <option value="police">Police Officer</option>
+        <option value="operator">Bus Operator</option>
+      </select>
+    </div>
+
+    <div id="driver-fields" class="role-fields hidden">
+      <div class="form-group">
+        <label>Driving License Number</label>
+        <input type="text" id="reg-license" placeholder="DL-XXXXXXXXXX" class="form-input">
+      </div>
+    </div>
+    <div id="police-fields" class="role-fields hidden">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Badge Number</label>
+          <input type="text" id="reg-badge" placeholder="Badge #" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Police Station</label>
+          <input type="text" id="reg-station" placeholder="Station name" class="form-input">
+        </div>
+      </div>
+    </div>
+    <div id="operator-fields" class="role-fields hidden">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="reg-company" placeholder="Company name" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Operator ID</label>
+          <input type="text" id="reg-opid" placeholder="Operator ID" class="form-input">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Min 6 characters" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="reg-pass2" placeholder="Confirm password" class="form-input">
+      </div>
+    </div>
+
+    <div id="reg-error" class="form-error hidden"></div>
+    <div id="reg-success" class="form-success hidden"></div>
+    <button class="btn-primary full-width" onclick="handleRegister()">Create Account</button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/auth.js' %}"></script>
+<script>
+  function updateRegFields() {
+    const role = document.getElementById('reg-role').value;
+    document.querySelectorAll('.role-fields').forEach(f => f.classList.add('hidden'));
+    if (role === 'driver') document.getElementById('driver-fields').classList.remove('hidden');
+    if (role === 'police') document.getElementById('police-fields').classList.remove('hidden');
+    if (role === 'operator') document.getElementById('operator-fields').classList.remove('hidden');
+  }
+</script>
+</body>
+</html>

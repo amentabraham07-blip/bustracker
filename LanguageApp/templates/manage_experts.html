@@ -1,0 +1,646 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Experts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--dark);
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-brand {
+            padding: 25px 20px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .brand-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .brand-text span {
+            color: #a5b4fc;
+            font-size: 0.8rem;
+            display: block;
+            font-weight: 400;
+        }
+
+        .sidebar-profile {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .profile-name {
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .profile-email {
+            color: #94a3b8;
+            font-size: 0.78rem;
+        }
+
+        .profile-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .sidebar-section {
+            padding: 15px 20px 5px;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 5px 10px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            gap: 12px;
+            margin-bottom: 3px;
+        }
+
+        .sidebar-menu li a:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .sidebar-menu li a.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .sidebar-menu li a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .top-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h4 {
+            color: var(--dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: #f8fafc;
+            border-radius: 25px;
+        }
+
+        .user-info-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .mini-stat {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mini-stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .mini-stat-icon.total { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .mini-stat-icon.approved { background: linear-gradient(135deg, var(--success), #059669); }
+        .mini-stat-icon.pending { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .mini-stat-icon.rejected { background: linear-gradient(135deg, var(--danger), #dc2626); }
+
+        .mini-stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .mini-stat-label {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Search Bar */
+        .search-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+        .btn-clear {
+            background: #f1f5f9;
+            color: var(--dark);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Table Card */
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .table-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .table-card-header h5 {
+            color: var(--dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+            padding: 12px 15px;
+        }
+
+        .table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: #f1f5f9;
+        }
+
+        .expert-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="brand-text">
+                AdminPanel
+                <span>Control Center</span>
+            </div>
+        </div>
+
+        <div class="sidebar-profile">
+            <div class="profile-avatar">{{ name|first|upper }}</div>
+            <div>
+                <div class="profile-name">{{ name }}</div>
+                <div class="profile-email">{{ email }}</div>
+                <div class="profile-badge">Admin</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">Main Menu</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{% url 'admindashboard' %}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-section">User Management</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{% url 'approve_experts' %}">
+                    <i class="fas fa-user-check"></i> Approve Experts
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'manage_students' %}">
+                    <i class="fas fa-user-graduate"></i> Manage Students
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'manage_experts' %}">
+                    <i class="fas fa-chalkboard-teacher"></i> Manage Experts
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-section">Content Management</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{% url 'admin_manage_courses' %}">
+                    <i class="fas fa-book"></i> Manage Courses
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'admin_manage_videos' %}" class="active">
+                    <i class="fas fa-video"></i> Manage Videos
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-section">Account</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <h4><i class="fas fa-chalkboard-teacher"></i> Manage Experts</h4>
+                <p style="color: #64748b; margin: 5px 0 0; font-size: 0.9rem;">
+                    View, search and manage expert accounts
+                </p>
+            </div>
+            <div class="user-info">
+                <div class="user-info-avatar">{{ name|first|upper }}</div>
+                <div>
+                    <div style="font-weight: 600; font-size: 0.9rem;">{{ username }}</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">{{ email }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="mini-stat">
+                <div class="mini-stat-icon total">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <div class="mini-stat-number">{{ total_experts }}</div>
+                    <div class="mini-stat-label">Total Experts</div>
+                </div>
+            </div>
+
+            <div class="mini-stat">
+                <div class="mini-stat-icon approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                    <div class="mini-stat-number">{{ approved_experts }}</div>
+                    <div class="mini-stat-label">Approved</div>
+                </div>
+            </div>
+
+            <div class="mini-stat">
+                <div class="mini-stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div class="mini-stat-number">{{ pending_experts }}</div>
+                    <div class="mini-stat-label">Pending</div>
+                </div>
+            </div>
+
+            <div class="mini-stat">
+                <div class="mini-stat-icon rejected">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div>
+                    <div class="mini-stat-number">{{ rejected_experts }}</div>
+                    <div class="mini-stat-label">Rejected</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-card">
+            <form method="GET" class="search-form">
+                <input type="text" 
+                       name="search" 
+                       class="search-input" 
+                       placeholder="Search by name or username..." 
+                       value="{{ search_query }}">
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                {% if search_query %}
+                <a href="{% url 'manage_experts' %}" class="btn-clear">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Experts Table -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <h5>
+                    <i class="fas fa-list"></i> 
+                    {% if search_query %}
+                        Search Results for "{{ search_query }}"
+                    {% else %}
+                        All Experts
+                    {% endif %}
+                    <span class="status-badge approved ms-2">{{ experts.count }} Experts</span>
+                </h5>
+            </div>
+
+            {% if experts %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Expert</th>
+                            <th>Username</th>
+                            <th>Phone</th>
+                            <th>DOB</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expert in experts %}
+                        <tr>
+                            <td style="color: #64748b;">{{ forloop.counter }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="expert-avatar">{{ expert.name|first|upper }}</div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--dark);">{{ expert.name }}</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">{{ expert.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #64748b;">{{ expert.username }}</td>
+                            <td style="color: #64748b;">{{ expert.phone }}</td>
+                            <td style="color: #64748b;">{{ expert.dob }}</td>
+                            <td>
+                                <span class="status-badge {{ expert.status }}">
+                                    {{ expert.status|capfirst }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'delete_expert' expert.id %}"
+                                   class="btn-delete"
+                                   onclick="return confirm('Delete {{ expert.name }}? This will also delete all their courses and videos!')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h5>No Experts Found</h5>
+                    {% if search_query %}
+                    <p>No results for "{{ search_query }}"</p>
+                    <a href="{% url 'manage_experts' %}" class="btn-clear mt-3">Clear Search</a>
+                    {% else %}
+                    <p>No experts registered yet</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

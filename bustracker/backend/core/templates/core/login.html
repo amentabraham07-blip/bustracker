@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — BusTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="auth-body">
+
+<div class="auth-bg">
+  <div class="auth-grid"></div>
+  <div class="auth-orb auth-orb-1"></div>
+  <div class="auth-orb auth-orb-2"></div>
+</div>
+
+<div class="auth-container">
+  <div class="auth-brand">
+    <div class="auth-logo">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="#00D4AA"/>
+        <path d="M8 28V18C8 14 11 12 15 12H25C29 12 32 14 32 18V28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="13" cy="29" r="3" fill="white"/>
+        <circle cx="27" cy="29" r="3" fill="white"/>
+        <path d="M8 22H32" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 12V22" stroke="white" stroke-width="1.5"/>
+        <path d="M26 12V22" stroke="white" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <h1 class="auth-title">BusTrack</h1>
+    <p class="auth-subtitle">Real-Time Bus Tracking System</p>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <a href="/login/" class="auth-tab active">Sign In</a>
+      <a href="/register/" class="auth-tab">Register</a>
+    </div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="Enter your username" class="form-input" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Enter your password" class="form-input" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') handleLogin()">
+    </div>
+    <div id="login-error" class="form-error hidden"></div>
+    <button class="btn-primary full-width" onclick="handleLogin()">
+      <span>Sign In</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/auth.js' %}"></script>
+<script>
+  // If already logged in, redirect
+  if (localStorage.getItem('bt_token')) {
+    window.location.href = '/dashboard/';
+  }
+</script>
+</body>
+</html>

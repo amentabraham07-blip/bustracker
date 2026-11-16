@@ -1,0 +1,605 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Doubts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --info: #06b6d4;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            color: var(--dark) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
+        .nav-link.active {
+            color: var(--primary) !important;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: var(--light);
+            border-radius: 50px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .page-header h4 {
+            color: var(--dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin: 5px 0 0 0;
+        }
+
+        /* Course Tabs */
+        .course-tabs {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .course-tabs h6 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .course-tab {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 25px;
+            background: #f1f5f9;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .course-tab:hover {
+            background: #e0e7ff;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .course-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+        }
+
+        .chat-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .chat-header small {
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: #f8fafc;
+        }
+
+        .message-group {
+            margin-bottom: 35px;
+        }
+
+        .video-indicator {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .video-badge {
+            display: inline-block;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+        }
+
+        .video-badge i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .chat-message {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .chat-message.student {
+            justify-content: flex-end;
+        }
+
+        .chat-message.expert {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .chat-message.student .message-bubble {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .chat-message.expert .message-bubble {
+            background: white;
+            color: var(--dark);
+            border: 2px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+
+        .message-text {
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        /* Input Area */
+        .chat-input {
+            padding: 25px;
+            background: white;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-row select {
+            flex: 0 0 280px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+
+        .input-row select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-row textarea {
+            flex: 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            resize: none;
+            font-size: 0.95rem;
+        }
+
+        .input-row textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 35px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+            color: #cbd5e1;
+        }
+
+        .empty-state h5 {
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 80%;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            .input-row select {
+                flex: 1;
+            }
+
+            .navbar-collapse {
+                background: white;
+                padding: 15px;
+                border-radius: 10px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'student_dashboard' %}">
+                <i class="fas fa-graduation-cap"></i> LearnHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student_dashboard' %}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_courses' %}">
+                            <i class="fas fa-book"></i> My Courses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_videos' %}">
+                            <i class="fas fa-video"></i> My Videos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_exams' %}">
+                            <i class="fas fa-clipboard-list"></i> My Exams
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exam_history' %}">
+                            <i class="fas fa-history"></i> Exam History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'my_doubts' %}">
+                            <i class="fas fa-question-circle"></i> My Doubts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-star"></i> Feedback
+                        </a>
+                    </li>
+                </ul>
+                <div class="user-profile ms-3">
+                    <div class="user-avatar">{{ name|first|upper }}</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">{{ name }}</div>
+                        <div style="font-size: 0.75rem; color: #64748b;">{{ email }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h4><i class="fas fa-comments"></i> My Doubts</h4>
+            <p>Chat with experts about your course questions</p>
+        </div>
+
+        <!-- Course Tabs -->
+        {% if courses_with_doubts %}
+        <div class="course-tabs">
+            <h6><i class="fas fa-book"></i> Select Course</h6>
+            {% for course in courses_with_doubts %}
+            <a href="?course_id={{ course.id }}" 
+               class="course-tab {% if selected_course_id == course.id|stringformat:'s' %}active{% endif %}">
+                {{ course.course_name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            {% if selected_course %}
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <h5>{{ selected_course.course_name }}</h5>
+                    <small>{{ selected_course.language.language }}</small>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    {% if chat_messages %}
+                        {% regroup chat_messages by doubt.video_id as video_groups %}
+                        {% for video_group in video_groups %}
+                            <div class="message-group">
+                                <!-- Video Indicator -->
+                                <div class="video-indicator">
+                                    <div class="video-badge">
+                                        <i class="fas fa-video"></i>
+                                        {% if video_group.list.0.video %}
+                                            {{ video_group.list.0.video.name }}
+                                        {% else %}
+                                            Video (ID: {{ video_group.grouper }})
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Messages for this video -->
+                                {% for item in video_group.list %}
+                                    <div class="chat-message {% if item.is_mine %}student{% else %}expert{% endif %}">
+                                        <div class="message-bubble">
+                                            <div class="message-sender">
+                                                {% if item.is_mine %}You{% else %}Expert{% endif %}
+                                            </div>
+                                            <div class="message-text">{{ item.doubt.message }}</div>
+                                            <div class="message-time">
+                                                {{ item.doubt.sent_at|date:"M d, Y - h:i A" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-comment-slash"></i>
+                            <h5>No messages yet</h5>
+                            <p>Start a conversation by sending a message below</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input">
+                    <form method="POST" action="{% url 'send_doubt_message' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_id" value="{{ selected_course.id }}">
+                        
+                        <div class="input-row">
+                            <select name="video_id" class="form-select" required>
+                                <option value="">Select Video...</option>
+                                {% for video in videos_in_course %}
+                                    <option value="{{ video.id }}">{{ video.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <textarea name="message" rows="2" placeholder="Type your doubt or question..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-send">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="empty-state" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <div>
+                        <i class="fas fa-comments"></i>
+                        <h5>No Conversations Yet</h5>
+                        <p>Ask doubts from video lessons to start chatting with experts</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-scroll to bottom
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Auto-scroll to bottom
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Auto-refresh messages every 3 seconds (without page reload)
+    {% if selected_course %}
+    let lastMessageCount = {{ chat_messages|length }};
+    
+    setInterval(async function() {
+        try {
+            const response = await fetch('?course_id={{ selected_course.id }}');
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newMessages = doc.getElementById('chatMessages');
+            
+            if (newMessages && chatMessages) {
+                const newCount = newMessages.children.length;
+                if (newCount !== lastMessageCount) {
+                    chatMessages.innerHTML = newMessages.innerHTML;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    lastMessageCount = newCount;
+                }
+            }
+        } catch (error) {
+            console.log('Refresh failed:', error);
+        }
+    }, 3000); // Check every 3 seconds
+    {% endif %}
+
+    // Clear form after submit
+    const form = document.querySelector('.chat-input form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            setTimeout(() => {
+                form.querySelector('textarea').value = '';
+                form.querySelector('select').value = '';
+            }, 100);
+        });
+    }
+</script>
+</body>
+</html>

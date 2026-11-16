@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Wastage Report</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {% load static %}
+    <!-- Bootstrap 3.3.7 -->
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons -->
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins -->
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Date Picker -->
+    <!-- Remove this line -->
+<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+      .zero-wastage {
+          color: #6c757d;
+      }
+      .search-bar, .date-filter {
+          margin-bottom: 15px;
+      }
+      .sort-dropdown {
+          display: inline-block;
+          margin-right: 10px;
+      }
+      .sort-icon {
+          cursor: pointer;
+          padding: 5px 10px;
+          background: #f4f4f4;
+          border-radius: 4px;
+      }
+      .sort-options {
+          display: none;
+          position: absolute;
+          background: white;
+          border: 1px solid #ddd;
+          z-index: 1000;
+          min-width: 160px;
+          box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      }
+      .sort-options a {
+          display: block;
+          padding: 8px 16px;
+          color: #333;
+      }
+      .sort-options a:hover {
+          background: #f5f5f5;
+      }
+      .active-sort {
+          background: #3c8dbc;
+          color: white;
+      }
+      .highlight-row {
+          background-color: #fffacd;
+      }
+    </style>
+  </head>
+  <body class="skin-blue sidebar-mini">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="../../index2.html" class="logo">
+          <span class="logo-mini"><b></b></span>
+          <span class="logo-lg"><b>POS</b>System</span>
+        </a>
+        
+       <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+              <span class="sr-only">Toggle navigation</span>
+            </a>
+          <div class="navbar-custom-menu">
+          
+           
+            <ul class="nav navbar-nav">
+              
+              <li class="dropdown user user-menu">
+                
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs">{{ username }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1>Wastage Analysis</h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Wastage Analysis</li>
+          </ol>
+        </section>
+
+        <aside class="main-sidebar">
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+              <div class="pull-left image">
+                {% load static%}
+                <img src="{% static 'adminp/dist/img/avatar.png' %}" class="img-circle" alt="User Image" />
+              </div>
+              <div class="pull-left info">
+                <p>{{ename}}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Stock Manager</a>
+              </div>
+            </div>
+  
+            <ul class="sidebar-menu">
+              <li class="active treeview">
+                <a href="#">
+                  <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span> 
+                </a>
+              </li>
+              <li class="treeview">
+                <a href="{%  url 'addcategory' %}">
+                  <i class="ion ion-stats-bars"></i>
+                  <span>Add Category</span>
+                </a>
+              </li>
+              <li>
+                <li class="treeview">
+                  <a href="{% url 'addcategory' %}">
+                    <i class="fa fa-plus-circle"></i> <!-- Icon for adding a category -->
+                    <span>Add Category</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'mcategory' %}">
+                    <i class="fa fa-list-alt"></i> <!-- Icon for managing categories -->
+                    <span>Manage Category</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'add_product' %}">
+                    <i class="fa fa-cart-plus"></i> <!-- Icon for adding a product -->
+                    <span>Add Product</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'manage_product' %}">
+                    <i class="fa fa-cubes"></i> <!-- Icon for managing products -->
+                    <span>Manage Products</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'manage_stock' %}">
+                    <i class="fa fa-warehouse"></i> <!-- Icon for managing stock -->
+                    <span>Manage Stocks</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'stock_performance' %}">
+                    <i class="fa fa-chart-line"></i> <!-- Icon for stock performance -->
+                    <span>Stock Performance</span>
+                  </a>
+                </li>
+  
+                <li>
+                  <a href="{% url 'wastage_management' %}">
+                    <i class="fa fa-trash"></i> <!-- Icon for stock performance -->
+                    <span>Wastage Management</span>
+                  </a>
+                </li>
+  
+                <li>
+                  <a href="{% url 'wastage_report' %}">
+                    <i class="fa fa-recycle"></i> <!-- Icon for stock performance -->
+                    <span>Wastage Analysis</span>
+                  </a>
+                </li>
+  
+                <li>
+                  <a href="{% url 'logout' %}">
+                    <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                    <span>Logout</span>
+                  </a>
+                </li>
+                
+              
+               
+              
+            </ul>
+          </section>
+        </aside>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Product Wastage Summary</h3>
+                  
+                  <form method="get" action="" class="form-inline">
+                    <!-- Sort Dropdown -->
+                    <div class="sort-dropdown">
+                      <div class="sort-icon" onclick="toggleSortOptions()">
+                        <i class="fa fa-sort"></i> Sort
+                        {% if sort == 'quantity_desc' %}
+                        <span class="label label-primary">Most</span>
+                        {% elif sort == 'quantity_asc' %}
+                        <span class="label label-primary">Least</span>
+                        {% endif %}
+                      </div>
+                      <div class="sort-options" id="sortOptions">
+                        <a href="?{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}sort=quantity_desc">
+                          <i class="fa fa-sort-amount-down"></i> Most Wastage
+                        </a>
+                        <a href="?{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}sort=quantity_asc">
+                          <i class="fa fa-sort-amount-up"></i> Least Wastage
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <!-- Date Range Filter -->
+                    <div class="form-group date-filter">
+                      <input type="text" name="start_date" class="form-control datepicker" 
+                             placeholder="Start Date" value="{{ start_date|default_if_none:'' }}">
+                      <input type="text" name="end_date" class="form-control datepicker" 
+                             placeholder="End Date" value="{{ end_date|default_if_none:'' }}">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-filter"></i> Filter
+                      </button>
+                      <a href="{% url 'wastage_report' %}" class="btn btn-default">
+                        <i class="fa fa-undo"></i> Reset
+                      </a>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="form-group search-bar">
+                      <div class="input-group">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search by product name or ID..." value="{{ search_query }}">
+                        <span class="input-group-btn">
+                          <button type="submit" class="btn btn-info">
+                            <i class="fa fa-search"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Total Wastage</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for product in products %}
+                      <tr class="{% if product.total_wastage == 0 %}zero-wastage{% endif %}">
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.total_wastage|floatformat:3 }} <br><b>Kg/Units of Wastage</b></td>
+                       
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="box-footer clearfix">
+                  <!-- Pagination would go here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+      </footer>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+    <!-- Date Picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+      $(document).ready(function(){
+          // Initialize datepicker
+          $('.datepicker').datepicker({
+              format: 'yyyy-mm-dd',
+              autoclose: true
+          });
+          
+          // Close sort dropdown when clicking elsewhere
+          $(document).click(function(e) {
+              if (!$(e.target).closest('.sort-dropdown').length) {
+                  $('#sortOptions').hide();
+              }
+          });
+      });
+      
+      function toggleSortOptions() {
+          $('#sortOptions').toggle();
+      }
+      
+      // Highlight active sort option
+      $(function() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const sortParam = urlParams.get('sort');
+          
+          if (sortParam) {
+              $('#sortOptions a').each(function() {
+                  if (this.href.includes(`sort=${sortParam}`)) {
+                      $(this).addClass('active-sort');
+                  }
+              });
+          }
+      });
+    </script>
+    <script>$(document).ready(function(){
+        // Initialize datepicker with max date set to today
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            endDate: new Date()  // Restrict end date to today
+        });
+        
+        // Set today's date as default if fields are empty
+        if (!$('#start-date').val()) {
+            $('#start-date').val(new Date().toISOString().split('T')[0]);
+        }
+        if (!$('#end-date').val()) {
+            $('#end-date').val(new Date().toISOString().split('T')[0]);
+        }
+        
+        // Close sort dropdown when clicking elsewhere
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.sort-dropdown').length) {
+                $('#sortOptions').hide();
+            }
+        });
+    });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Invoice Details</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    {% load static %}
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <style>
+        .invoice-title h2, .invoice-title h3 {
+          display: inline-block;
+        }
+        .table > tbody > tr > .no-line {
+          border-top: none;
+        }
+        .table > thead > tr > .no-line {
+          border-bottom: none;
+        }
+        .table > tbody > tr > .thick-line {
+          border-top: 2px solid;
+        }
+        
+        /* Hide buttons when printing */
+        @media print {
+          .box-footer {
+            display: none !important;
+          }
+        }
+      </style>
+  </head>
+  <body class="skin-blue">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="{% url 'admin_dashboard' %}" class="logo"><b>POS</b>System</a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs"><b>{{username}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1>Invoice Details</h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'past_invoice_admin' %}">Past Invoices</a></li>
+            <li class="active">Invoice Details</li>
+          </ol>
+        </section>
+
+        <aside class="main-sidebar">
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+              <div class="pull-left image">
+                <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+              </div>
+              <div class="pull-left info">
+                <p>{{ ename }}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
+            </div>
+  
+            <ul class="sidebar-menu">
+              <li class="active treeview">
+                <a href="{% url 'admin_dashboard' %}">
+                  <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+                </a>
+              </li>
+              <li class="treeview">
+                <a href="{% url 'add_employee' %}">
+                  <i class="fa fa-user-plus"></i> <!-- Free icon -->
+                  <span>Add Employee</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'memployee' %}">
+                  <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+                  <span>Manage Employee</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'inventory' %}">
+                  <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+                  <span>Product Inventory</span>
+                </a>
+              </li>
+              
+             
+              
+              <li>
+                <a href="{% url 'past_invoice_admin' %}">
+                  <i class="fa fa-file-text"></i> <!-- Free document icon -->
+                  <span>Invoice History</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'wastage_report_admin' %}">
+                  <i class="fa fa-trash"></i> <!-- Free trash icon -->
+                  <span>Wastage / Loss</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'return_history_admin' %}">
+                  <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+                  <span>Returns History</span>
+                </a>
+              </li>
+              
+              <li>
+                <a href="{% url 'sales_analysis' %}">
+                  <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+                  <span>Sales Performance</span>
+                </a>
+              </li>
+  
+              <li>
+                <a href="{% url 'logout' %}">
+                  <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </aside>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-primary">
+                <div class="box-header">
+                  <h3 class="box-title">Invoice #{{ invoice.invoice_id }}</h3>
+                </div>
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="invoice-title">
+                        <h2>Invoice</h2><h3 class="pull-right">#{{ invoice.invoice_id }}</h3>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <address>
+                            <strong>Date:</strong><br>
+                            {{ invoice.date|date:"M d, Y" }}<br>
+                          </address>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                          <address>
+                            <strong>Customer Phone:</strong><br>
+                            {% if invoice.customer_phone %}{{ invoice.customer_phone }}{% else %}Not Available{% endif %}<br>
+                          </address>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title"><strong>Order summary</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                          <div class="table-responsive">
+                            <table class="table table-condensed">
+                              <thead>
+                                <tr>
+                                  <td><strong>S.No</strong></td>
+                                  <td class="text-center"><strong>Product</strong></td>
+                                  <td class="text-center"><strong>Price</strong></td>
+                                  <td class="text-center"><strong>Quantity</strong></td>
+                                  <td class="text-center"><strong>Amount</strong></td>
+                                  <td class="text-center"><strong>Profit</strong></td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for detail in invoice_details %}
+                                <tr>
+                                  <td>{{ forloop.counter }}</td>
+                                  <td class="text-center">{{ detail.product_name }}</td>
+                                  <td class="text-center">₹{{ detail.price }}</td>
+                                  <td class="text-center">{{ detail.quantity }}</td>
+                                  <td class="text-center">₹{{ detail.amount }}</td>
+                                  <td class="text-center">₹{{ detail.profit|default:"0.00" }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                  <td class="thick-line"></td>
+                                  <td class="thick-line"></td>
+                                  <td class="thick-line"></td>
+                                  <td class="thick-line"></td>
+                                  <td class="thick-line text-center"><strong>Total Amount</strong></td>
+                                  <td class="thick-line text-right">₹{{ invoice.total_amount }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="no-line"></td>
+                                  <td class="no-line"></td>
+                                  <td class="no-line"></td>
+                                  <td class="no-line"></td>
+                                  <td class="no-line text-center"><strong>Total Profit</strong></td>
+                                  <td class="no-line text-right">₹{{ invoice.total_profit|default:"0.00" }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="box-footer">
+                  <a href="{% url 'past_invoice_admin' %}" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Back to Invoices
+                  </a>
+                  <button class="btn btn-primary pull-right" onclick="window.print()">
+                    <i class="fa fa-print"></i> Print Invoice
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+      </footer>
+    </div>
+
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'adminp/plugins/fastclick/fastclick.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Dashboard</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    
+    {% load static %}
+    <link href="{% static 'adminp/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/AdminLTE.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'adminp/dist/css/skins/_all-skins.min.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  </head>
+    <body class="skin-blue">
+      <div class="wrapper">
+        <header class="main-header">
+          <a href="{% url 'admin_dashboard' %}" class="logo"><b>POS</b>System</a>
+          <nav class="navbar navbar-static-top" role="navigation">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+              <span class="sr-only">Toggle navigation</span>
+            </a>
+            <div class="navbar-custom-menu">
+              <ul class="nav navbar-nav">
+                <li class="dropdown user user-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image"/>
+                    <span class="hidden-xs"><b>{{ username }}</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="user-header">
+                      <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+                      <p>{{ username }}</p>
+                    </li>
+                    <li class="user-footer">
+                      <div class="pull-left">
+                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                      </div>
+                      <div class="pull-right">
+                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </header>
+  
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>Edit Employee Details</h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="#">Manage Employee</a></li>
+                    <li><a href="#">Edit</a></li>
+                </ol>
+            </section>
+            <aside class="main-sidebar">
+              <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                  <div class="pull-left image">
+                    <img src="{% static 'adminp/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image" />
+                  </div>
+                  <div class="pull-left info">
+                    <p>{{ name }}</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                  </div>
+                </div>
+      
+                <ul class="sidebar-menu">
+                  <li class="active treeview">
+                    <a href="{% url 'admin_dashboard' %}">
+                      <i class="fa fa-dashboard"></i> <span>Dashboard</span> 
+                    </a>
+                  </li>
+                  <li class="treeview">
+                    <a href="{% url 'add_employee' %}">
+                      <i class="fa fa-user-plus"></i> <!-- Free icon -->
+                      <span>Add Employee</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'memployee' %}">
+                      <i class="fa fa-users"></i> <!-- Free alternative for employee management -->
+                      <span>Manage Employee</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'inventory' %}">
+                      <i class="fa fa-cubes"></i> <!-- Free inventory icon -->
+                      <span>Product Inventory</span>
+                    </a>
+                  </li>
+                  
+                 
+                  
+                  <li>
+                    <a href="{% url 'past_invoice_admin' %}">
+                      <i class="fa fa-file-text"></i> <!-- Free document icon -->
+                      <span>Invoice History</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="{% url 'wastage_report_admin' %}">
+                      <i class="fa fa-trash"></i> <!-- Free trash icon -->
+                      <span>Wastage / Loss</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="{% url 'return_history_admin' %}">
+                      <i class="fa fa-exchange"></i> <!-- Free return/exchange icon -->
+                      <span>Returns History</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="{% url 'sales_analysis' %}">
+                      <i class="fa fa-bar-chart"></i> <!-- Free bar chart icon -->
+                      <span>Sales Performance</span>
+                    </a>
+                  </li>
+      
+                  <li>
+                    <a href="{% url 'logout' %}">
+                      <i class="fa fa-user"></i> <!-- Icon for stock performance -->
+                      <span>Logout</span>
+                    </a>
+                  </li>
+                </ul>
+              </section>
+            </aside>
+
+            <section class="content">
+              <div class="row">
+                  <div class="col-xs-12">
+                      <div class="box">
+                          <div class="box-header">
+                              <h3 class="box-title">Update Employee Information</h3>
+                          </div>
+                          <div class="box-body">
+                              <form method="POST" action="">
+                                  {% csrf_token %}
+                                  <table class="table table-hover">
+                                      <tr>
+                                          <th>Employee ID</th>
+                                          <td>{{ employee.id }}</td>
+                                      </tr>
+                                      <tr>
+                                          <th>Employee Name</th>
+                                          <td><input type="text" name="ename" value="{{ employee.ename }}" class="form-control" required></td>
+                                      </tr>
+                                      <tr>
+                                          <th>Designation</th>
+                                          <td>
+                                              <select name="designation" class="form-control" required>
+                                                  <option value="">Select Designation</option>
+                                                  <option value="Biller" {% if employee.designation == 'Biller' %}selected{% endif %}>Biller</option>
+                                                  <option value="Stock Manager" {% if employee.designation == 'Stock Manager' %}selected{% endif %}>Stock Manager</option>
+                                              </select>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <th>Date of Birth</th>
+                                          <td><input type="date" name="dob" value="{{ employee.dob|date:'Y-m-d' }}" class="form-control" required></td>
+                                      </tr>
+                                      <tr>
+                                          <th>Email</th>
+                                          <td><input type="email" name="email" value="{{ employee.email }}" class="form-control" required></td>
+                                      </tr>
+                                      <tr>
+                                        <th>Phone No</th>
+                                        <td>
+                                          <input type="text" 
+                                                 name="pno" 
+                                                 value="{{ employee.pno }}" 
+                                                 class="form-control" 
+                                                 pattern="[0-9]{10}"
+                                                 title="Please enter exactly 10 digits (numbers only)"
+                                                 maxlength="10"
+                                                 required>
+                                          <small class="form-text text-muted">10 digits only (no spaces or dashes)</small>
+                                        </td>
+                                      </tr>
+                                          <th>Address</th>
+                                          <td><textarea name="address" class="form-control" required>{{ employee.address }}</textarea></td>
+                                      </tr>
+                                  </table>
+      
+                                  <button type="submit" class="btn btn-success">Save Changes</button>
+                                  <a href="{% url 'memployee' %}" class="btn btn-default">Cancel</a>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+        </div>
+        <footer class="main-footer">
+          <div class="pull-right hidden-xs">
+            <b>Version</b> 1.0
+          </div>
+          <strong>&copy; 2025<a href="http://almsaeedstudio.com">  <span> POS System</span></span></a>.</strong> All rights reserved.
+        </footer>
+
+        
+    </div>
+
+    
+    <script src="{% static 'adminp/plugins/jQuery/jQuery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'adminp/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'adminp/plugins/fastclick/fastclick.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/app.min.js' %}"></script>
+    <script src="{% static 'adminp/dist/js/demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    
+    <script>
+        $(document).ready(function() {
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire({
+                        icon: '{% if message.tags == "error" %}error{% else %}success{% endif %}',
+                        title: '{{ message }}',
+                        showConfirmButton: true,
+                        timer: 3000
+                    });
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+    
+</body>
+</html>

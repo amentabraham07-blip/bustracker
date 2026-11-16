@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Details | Neon POS</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #a855f7;
+            --accent: #10b981;
+            --dark: #1e1e2e;
+            --light: #f8fafc;
+            --neon: #00f7ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #2a2a4a);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 80px 1fr 60px;
+            min-height: 100vh;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header Styles */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            background: var(--glass);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(122, 90, 248, 0.1);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--dark);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1.5rem;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .employee-profile {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            background: linear-gradient(45deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.05));
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--neon);
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 3rem;
+            background: var(--dark);
+        }
+
+        .card {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .card:hover {
+            background: rgba(122, 90, 248, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Footer Styles */
+        .footer {
+            grid-column: 2 / -2;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(122, 90, 248, 0.1);
+            color: var(--neon);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(122, 90, 248, 0.03);
+        }
+
+        td {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-back {
+            background: var(--dark);
+            color: var(--neon);
+            border: 1px solid var(--neon);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-back:hover {
+            background: var(--neon);
+            color: var(--dark);
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        /* SweetAlert customization */
+        .swal2-popup {
+            background: var(--dark) !important;
+            border: 1px solid var(--neon) !important;
+            color: var(--light) !important;
+        }
+
+        .swal2-title {
+            color: var(--neon) !important;
+        }
+
+        .swal2-confirm {
+            background: var(--primary) !important;
+        }
+
+        .swal2-confirm:hover {
+            background: var(--secondary) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="logo">POS System</div>
+            <div class="user-info">
+                <span>{{ username }}</span>
+                <i class="fas fa-user-astronaut fa-lg" style="color: var(--neon);"></i>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="employee-profile">
+                <img src="{% static 'adminp/dist/img/avatar5.png' %}" alt="Profile" class="profile-img">
+                <h3 style="color: var(--neon); margin-bottom: 0.5rem;">{{ ename }}</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);"> Cashier</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <a href="{% url 'returns' %}" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Manage Returns
+            </a>
+
+            <div class="card">
+                <div class="invoice-header">
+                    <h2 style="color: var(--neon);">Invoice #{{ invoice.invoice_id }}</h2>
+                    <p>Date: {{ invoice.date|date:"M d, Y" }}</p>
+                    <p>Customer Phone: {{ invoice.customer_phone|default:"Not Available" }}</p>
+                    <p>Total Amount: ₹{{ invoice.total_amount }}</p>
+                </div>
+
+                <h3 style="color: var(--neon); margin-bottom: 1.5rem;">Products Eligible for Return</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if eligible_products %}
+                                {% for product in eligible_products %}
+                                <tr>
+                                    <td>{{ product.product_name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>₹{{ product.amount }}</td>
+                                    <td>
+                                        <button class="btn btn-danger process-return" data-id="{{ product.id }}">
+                                            <i class="fas fa-undo"></i> Process Return
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="no-products">
+                                        None of the products from this invoice are eligible for return.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            © 2023 NEONPOS | Next-Gen Retail Solutions
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Function to get CSRF token
+    function getCSRFToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        return cookieValue;
+    }
+
+    // Process return button click handler
+    document.querySelectorAll('.process-return').forEach(button => {
+        button.addEventListener('click', async function() {
+            const returnId = this.getAttribute('data-id');
+            const row = this.closest('tr');
+            
+            // Show confirmation dialog
+            const { isConfirmed } = await Swal.fire({
+                title: 'Confirm Return',
+                html: `Are you sure you want to process this return?<br><br>
+                      <strong>This action cannot be undone.</strong>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#7c3aed',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, process return',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+            
+            if (!isConfirmed) return;
+            
+            // Show processing indicator
+            Swal.fire({
+                title: 'Processing...',
+                html: 'Please wait while we process your return',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            try {
+                const response = await fetch('{% url "process_return" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({ return_id: returnId })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Network response was not ok');
+                }
+                
+                if (data.success) {
+                    // Update UI immediately
+                    row.innerHTML = `
+                        <td colspan="5" class="text-center text-success">
+                            <i class="fas fa-check-circle"></i> Return processed successfully
+                        </td>
+                    `;
+                    
+                    // Update invoice total display if needed
+                    const totalElement = document.querySelector('.invoice-total');
+                    if (totalElement && data.new_total) {
+                        totalElement.textContent = `₹${data.new_total}`;
+                    }
+                    
+                    await Swal.fire({
+                        title: 'Success!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Return processing error:', error);
+                await Swal.fire({
+                    title: 'Error!',
+                    html: `Failed to process return:<br><strong>${error.message}</strong>`,
+                    icon: 'error',
+                    confirmButtonColor: '#7c3aed'
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

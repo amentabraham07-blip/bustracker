@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Pending Approvals{% endblock %}
+{% block page_title %}Pending Approvals{% endblock %}
+{% block content %}
+<div class="panel-header"><h2>Pending Approvals</h2></div>
+<div id="approvals-grid" class="approvals-grid"></div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/approvals.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Users{% endblock %}
+{% block page_title %}All Users{% endblock %}
+{% block content %}
+<div class="panel-header">
+  <h2>All Users</h2>
+  <div class="panel-actions">
+    <select id="user-role-filter" class="form-input compact" onchange="loadUsers()">
+      <option value="">All Roles</option>
+      <option value="user">Passengers</option>
+      <option value="driver">Drivers</option>
+      <option value="police">Police</option>
+      <option value="operator">Operators</option>
+    </select>
+  </div>
+</div>
+<div id="users-table-container"></div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/users.js' %}"></script>
+{% endblock %}
